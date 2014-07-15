@@ -74,7 +74,7 @@ Page {
                 width: parent.width
                 color: Theme.highlightColor
                 font.pixelSize: Theme.fontSizeMedium
-                text: qsTr("Last result (saved in clipboard)")
+                text: qsTr("Last result (copied to clipboard)")
             }
 
             BackgroundItem {
