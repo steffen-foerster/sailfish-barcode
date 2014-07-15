@@ -43,7 +43,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Last result (saved in clipboard)</source>
+        <source>Last result (copied to clipboard)</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
