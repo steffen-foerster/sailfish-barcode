@@ -52,8 +52,15 @@ public:
     Q_INVOKABLE void setDecoderFormat(const QString &format);
     Q_INVOKABLE void startScanning();
 
+    // page have to stop the camera if application is deactivated
+    Q_INVOKABLE void startCamera();
+    Q_INVOKABLE void stopCamera();
+
     Q_ENUMS(ErrorCode)
 
+    // must be public, to start in new thread
+    void processStartCamera();
+    void processStopCamera();
     void processCameraLock();
     void processCapturing();
     void processDecode();
@@ -69,7 +76,6 @@ public:
     };
 
 signals:
-    void captureFinished(const QString &location);
     void decodingFinished(const QString &code);
     void error(ErrorCode errorCode);
     void mediaObjectChanged();
@@ -79,6 +85,7 @@ public slots:
     void slotImageSaved();
     void slotLockFailed();
     void slotCaptureFailed();
+    void slotStatusChanged(QCamera::Status status);
 
 protected:
     // see qdeclarativecamera_p.h
@@ -89,6 +96,7 @@ private:
     BarcodeDecoder* decoder;
     QCameraImageCapture* imageCapture;
     QCamera* camera;
+    QMutex cameraMutex;
     bool flagComponentComplete;
     bool scanRunning;
 };

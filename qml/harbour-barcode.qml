@@ -30,8 +30,11 @@ ApplicationWindow
 {
     id: window
 
+    signal applicationActive()
+    signal applicationInActive()
+
     function getVersion() {
-        return "0.1.0";
+        return "0.1.1";
     }
 
     function openInDefaultBrowser(url) {
@@ -42,6 +45,18 @@ ApplicationWindow
 
     initialPage: Component { MainPage { } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
+
+    onApplicationActive: {
+        console.log("application state changed to ACTIVE")
+        applicationActive();
+    }
+
+    onApplicationInActive: {
+        console.log("application state changed to INACTIVE")
+        applicationInActive();
+    }
+
+
 
     // infoPanel borrowed from https://github.com/veskuh/Tweetian/blob/sailfish-port/qml/tweetian-harmattan/main.qml - Thanks!
     Rectangle {

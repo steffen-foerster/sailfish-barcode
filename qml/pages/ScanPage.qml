@@ -35,6 +35,31 @@ Page {
 
     signal scanned(variant result)
 
+    Connections {
+        target: Qt.application
+        onActiveChanged: {
+            if (Qt.application.active) {
+                console.log("application state changed to ACTIVE")
+                // a deactivated application stops the camera so we have to start it again
+                scanner.startCamera()
+            }
+            else {
+                console.log("application state changed to INACTIVE")
+                // if the application is deactivated we have to stop the camera because of power
+                // consumption issues and impact to the camera application
+                scanner.stopCamera()
+            }
+        }
+    }
+    /*
+    Component.onCompleted: {
+
+                window.applicationActive.connect(scanner.startCamera);
+
+                window.applicationInActive.connect(scanner.stopCamera);
+    }
+    */
+
     SilicaFlickable {
         anchors.fill: parent
         contentHeight: column.height
