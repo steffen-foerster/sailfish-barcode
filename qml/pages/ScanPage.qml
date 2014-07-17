@@ -35,6 +35,13 @@ Page {
 
     signal scanned(variant result)
 
+    onStatusChanged: {
+        if (status === PageStatus.Active) {
+            console.log("Page is ACTIVE")
+            scanner.startCamera()
+        }
+    }
+
     Connections {
         target: Qt.application
         onActiveChanged: {
@@ -51,14 +58,6 @@ Page {
             }
         }
     }
-    /*
-    Component.onCompleted: {
-
-                window.applicationActive.connect(scanner.startCamera);
-
-                window.applicationInActive.connect(scanner.stopCamera);
-    }
-    */
 
     SilicaFlickable {
         anchors.fill: parent

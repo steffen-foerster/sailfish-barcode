@@ -61,8 +61,8 @@ public:
     // must be public, to start in new thread
     void processStartCamera();
     void processStopCamera();
-    void processCameraLock();
-    void processCapturing();
+    //void processCameraLock();
+    //void processCapturing();
     void processDecode();
 
     // see qdeclarativecamera_p.h
@@ -83,9 +83,12 @@ signals:
 public slots:
     void slotLockStatusChanged(QCamera::LockStatus status);
     void slotImageSaved();
+    void slotDecodingFinished();
     void slotLockFailed();
     void slotCaptureFailed();
     void slotStatusChanged(QCamera::Status status);
+    void slotStateChanged(QCamera::State state);
+
 
 protected:
     // see qdeclarativecamera_p.h
@@ -96,9 +99,9 @@ private:
     BarcodeDecoder* decoder;
     QCameraImageCapture* imageCapture;
     QCamera* camera;
-    QMutex cameraMutex;
     bool flagComponentComplete;
     bool scanRunning;
+    bool stopCameraAfterScanning;
 };
 
 #endif // BARCODESCANNER_H
