@@ -73,6 +73,10 @@
         <source>The bar code should be smaller than the red border.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Scanning canceled.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>harbour-barcode</name>

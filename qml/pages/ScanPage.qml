@@ -98,6 +98,12 @@ Page {
                         statusText.text = qsTr("Scanning failed (code: %1)! Try again.").arg(errorCode)
                         busyIndicator.running = false
                     }
+
+                    onDecodingCanceled: {
+                        console.log("scanning canceled")
+                        statusText.text = qsTr("Scanning canceled.")
+                        busyIndicator.running = false
+                    }
                 }
 
                 VideoOutput {

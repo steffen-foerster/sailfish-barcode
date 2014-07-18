@@ -59,10 +59,6 @@ public:
     Q_ENUMS(ErrorCode)
 
     // must be public, to start in new thread
-    void processStartCamera();
-    void processStopCamera();
-    //void processCameraLock();
-    //void processCapturing();
     void processDecode();
 
     // see qdeclarativecamera_p.h
@@ -72,11 +68,12 @@ public:
         LockFailed,
         CameraUnavailable,
         CaptureFailed,
-        ImageSaveFailed
+        CameraError
     };
 
 signals:
     void decodingFinished(const QString &code);
+    void decodingCanceled();
     void error(ErrorCode errorCode);
     void mediaObjectChanged();
 
@@ -86,6 +83,7 @@ public slots:
     void slotDecodingFinished();
     void slotLockFailed();
     void slotCaptureFailed();
+    void slotCameraError(QCamera::Error value);
     void slotStatusChanged(QCamera::Status status);
     void slotStateChanged(QCamera::State state);
 
@@ -96,12 +94,14 @@ protected:
     void componentComplete();
 
 private:
+    void cancelScanning();
+
     BarcodeDecoder* decoder;
     QCameraImageCapture* imageCapture;
     QCamera* camera;
     bool flagComponentComplete;
-    bool scanRunning;
-    bool stopCameraAfterScanning;
+    bool flagScanRunning;
+    bool flagCancelScanning;
 };
 
 #endif // BARCODESCANNER_H
