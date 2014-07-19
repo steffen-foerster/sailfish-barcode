@@ -81,6 +81,11 @@ Page {
                 BarcodeScanner {
                     id: scanner
 
+                    onCameraStarted: {
+                        console.log("camera is started")
+                        statusText.text = qsTr("Tap on viewfinder to scan")
+                    }
+
                     onDecodingFinished: {
                         console.log("decoding finished, code: ", code)
                         if (code.length > 0) {
@@ -95,7 +100,12 @@ Page {
 
                     onError: {
                         console.log("scanning failed: ", errorCode)
-                        statusText.text = qsTr("Scanning failed (code: %1)! Try again.").arg(errorCode)
+                        if (errorCode === BarcodeScanner.JollaCameraRunning) {
+                            statusText.text = qsTr("Please close the Jolla Camera app.")
+                        }
+                        else {
+                            statusText.text = qsTr("Scanning failed (code: %1)! Try again.").arg(errorCode)
+                        }
                         busyIndicator.running = false
                     }
 

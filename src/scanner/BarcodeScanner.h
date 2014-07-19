@@ -68,10 +68,12 @@ public:
         LockFailed,
         CameraUnavailable,
         CaptureFailed,
-        CameraError
+        CameraError,
+        JollaCameraRunning
     };
 
 signals:
+    void cameraStarted();
     void decodingFinished(const QString &code);
     void decodingCanceled();
     void error(ErrorCode errorCode);
@@ -80,6 +82,7 @@ signals:
 public slots:
     void slotLockStatusChanged(QCamera::LockStatus status);
     void slotImageSaved();
+
     void slotDecodingFinished();
     void slotLockFailed();
     void slotCaptureFailed();
@@ -95,6 +98,8 @@ protected:
 
 private:
     void cancelScanning();
+    void createConnections();
+    bool isJollaCameraRunning();
 
     BarcodeDecoder* decoder;
     QCameraImageCapture* imageCapture;

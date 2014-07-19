@@ -74,7 +74,7 @@ Page {
                 width: parent.width
                 color: Theme.highlightColor
                 font.pixelSize: Theme.fontSizeMedium
-                text: qsTr("Last result (copied to clipboard)")
+                text: qsTr("Last result (copied to clipboard):")
             }
 
             BackgroundItem {
@@ -103,6 +103,21 @@ Page {
                 onClicked: {
                     openInDefaultBrowser(resultText.text);
                 }
+            }
+
+            Label {
+                id: warning
+                anchors {
+                    left: parent.left
+                    leftMargin: Theme.paddingLarge
+                    rightMargin: Theme.paddingLarge
+                }
+                width: parent.width - 2 * Theme.paddingLarge
+                color: Theme.highlightColor
+                font.pixelSize: Theme.fontSizeMedium
+                text: qsTr("Note: This app prevents a scan if the Jolla Camera app is running. \
+This restriction helps to avoid an interference of the Camera app.")
+                wrapMode: Text.Wrap
             }
         }
     }

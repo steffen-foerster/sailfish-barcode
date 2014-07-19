@@ -43,7 +43,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Last result (copied to clipboard)</source>
+        <source>Last result (copied to clipboard):</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Note: This app prevents a scan if the Jolla Camera app is running. This restriction helps to avoid an interference of the Camera app.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -75,6 +79,10 @@
     </message>
     <message>
         <source>Scanning canceled.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Please close the Jolla Camera app.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
