@@ -54,7 +54,6 @@ public:
 
     // page have to stop the camera if application is deactivated
     Q_INVOKABLE void startCamera();
-    Q_INVOKABLE void stopCamera();
 
     Q_ENUMS(ErrorCode)
 
@@ -75,7 +74,6 @@ public:
 signals:
     void cameraStarted();
     void decodingFinished(const QString &code);
-    void decodingCanceled();
     void error(ErrorCode errorCode);
     void mediaObjectChanged();
 
@@ -97,7 +95,6 @@ protected:
     void componentComplete();
 
 private:
-    void cancelScanning();
     void createConnections();
     bool isJollaCameraRunning();
 
@@ -106,7 +103,6 @@ private:
     QCamera* camera;
     bool flagComponentComplete;
     bool flagScanRunning;
-    bool flagCancelScanning;
 };
 
 #endif // BARCODESCANNER_H

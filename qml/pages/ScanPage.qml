@@ -33,11 +33,29 @@ Page {
     // decoder format: "QR", "EAN"
     property string format
 
+    property variant scanner
+
+    property Item viewFinder
+
     signal scanned(variant result)
+
+    function createScanner() {
+        console.log("creating scanner ...")
+        scanPage.scanner = scannerComponent.createObject(scanPage)
+        scanPage.viewFinder = viewFinderComponent.createObject(parentViewFinder)
+        scanPage.viewFinder.source = scanPage.scanner
+    }
+
+    function destroyScanner() {
+        console.log("destroying scanner ...")
+        scanPage.viewFinder.destroy()
+        scanPage.scanner.destroy()
+    }
 
     onStatusChanged: {
         if (status === PageStatus.Active) {
             console.log("Page is ACTIVE")
+            createScanner()
             scanner.startCamera()
         }
     }
@@ -47,14 +65,71 @@ Page {
         onActiveChanged: {
             if (Qt.application.active) {
                 console.log("application state changed to ACTIVE")
-                // a deactivated application stops the camera so we have to start it again
+                createScanner()
                 scanner.startCamera()
             }
             else {
                 console.log("application state changed to INACTIVE")
-                // if the application is deactivated we have to stop the camera because of power
-                // consumption issues and impact to the camera application
-                scanner.stopCamera()
+                // if the application is deactivated we have to stop the camera and destroy the scanner object
+                // because of power consumption issues and impact to the camera application
+                destroyScanner()
+                busyIndicator.running = false
+            }
+        }
+    }
+
+    Component {
+        id: scannerComponent
+
+        BarcodeScanner {
+
+            onCameraStarted: {
+                console.log("camera is started")
+                statusText.text = qsTr("Tap on viewfinder to scan")
+            }
+
+            onDecodingFinished: {
+                console.log("decoding finished, code: ", code)
+                if (code.length > 0) {
+                    pageStack.navigateBack()
+                    scanPage.scanned(code)
+                }
+                else {
+                    statusText.text = qsTr("No code detected! Try again.")
+                }
+                busyIndicator.running = false
+            }
+
+            onError: {
+                console.log("scanning failed: ", errorCode)
+                if (errorCode === BarcodeScanner.JollaCameraRunning) {
+                    statusText.text = qsTr("Please close the Jolla Camera app.")
+                }
+                else {
+                    statusText.text = qsTr("Scanning failed (code: %1)! Try again.").arg(errorCode)
+                }
+                busyIndicator.running = false
+            }
+        }
+    }
+
+    Component {
+        id: viewFinderComponent
+
+        VideoOutput {
+            anchors.fill: parent
+            focus : visible // to receive focus and capture key events when visible
+            fillMode: VideoOutput.PreserveAspectFit
+            orientation: -90
+
+            MouseArea {
+                anchors.fill: parent;
+                onClicked: {
+                    statusText.text = qsTr("Scan in progress!")
+                    busyIndicator.running = true
+                    scanner.setDecoderFormat(format)
+                    scanner.startScanning()
+                }
             }
         }
     }
@@ -74,75 +149,20 @@ Page {
             }
 
             Item {
+                id: parentViewFinder
+
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: parent.width * 2/3
                 height: ((parent.width * 2/3) / 3) * 4
 
-                BarcodeScanner {
-                    id: scanner
-
-                    onCameraStarted: {
-                        console.log("camera is started")
-                        statusText.text = qsTr("Tap on viewfinder to scan")
-                    }
-
-                    onDecodingFinished: {
-                        console.log("decoding finished, code: ", code)
-                        if (code.length > 0) {
-                            pageStack.navigateBack()
-                            scanPage.scanned(code)
-                        }
-                        else {
-                            statusText.text = qsTr("No code detected! Try again.")
-                        }
-                        busyIndicator.running = false
-                    }
-
-                    onError: {
-                        console.log("scanning failed: ", errorCode)
-                        if (errorCode === BarcodeScanner.JollaCameraRunning) {
-                            statusText.text = qsTr("Please close the Jolla Camera app.")
-                        }
-                        else {
-                            statusText.text = qsTr("Scanning failed (code: %1)! Try again.").arg(errorCode)
-                        }
-                        busyIndicator.running = false
-                    }
-
-                    onDecodingCanceled: {
-                        console.log("scanning canceled")
-                        statusText.text = qsTr("Scanning canceled.")
-                        busyIndicator.running = false
-                    }
-                }
-
-                VideoOutput {
-                    id: viewFinder
-                    source: scanner
-                    anchors.fill: parent
-                    focus : visible // to receive focus and capture key events when visible
-                    fillMode: VideoOutput.PreserveAspectFit
-                    orientation: -90
-
-                    MouseArea {
-                        anchors.fill: parent;
-                        onClicked: {
-                            statusText.text = qsTr("Scan in progress!")
-                            busyIndicator.running = true
-                            scanner.setDecoderFormat(format)
-                            scanner.startScanning()
-                        }
-                    }
-                }
-
                 Rectangle {
                     anchors {
-                        horizontalCenter: viewFinder.horizontalCenter
-                        verticalCenter: viewFinder.verticalCenter
+                        horizontalCenter: parent.horizontalCenter
+                        verticalCenter: parent.verticalCenter
                     }
 
-                    width: viewFinder.width * 0.7
-                    height: viewFinder.height * 0.7
+                    width: viewFinder ? viewFinder.width * 0.7 : 0
+                    height: viewFinder ? viewFinder.height * 0.7 : 0
                     z: 2
                     border {
                         color: "red" //Theme.highlightColor

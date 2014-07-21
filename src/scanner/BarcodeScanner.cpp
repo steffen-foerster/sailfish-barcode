@@ -44,7 +44,6 @@ BarcodeScanner::BarcodeScanner(QObject * parent) : QObject(parent)
 
     flagComponentComplete = false;
     flagScanRunning = false;
-    flagCancelScanning = false;
 
     createConnections();
 
@@ -118,7 +117,6 @@ void BarcodeScanner::startCamera() {
     else {
         qDebug() << "camera is already started";
     }
-    flagCancelScanning = false;
 }
 
 void BarcodeScanner::slotStateChanged(QCamera::State state) {
@@ -126,23 +124,6 @@ void BarcodeScanner::slotStateChanged(QCamera::State state) {
 
     if (camera->state() == QCamera::ActiveState) {
         emit cameraStarted();
-    }
-}
-
-void BarcodeScanner::stopCamera() {
-    qDebug() << "camera has state: " << camera->state();
-    if (camera->state() == QCamera::ActiveState) {
-        if (flagScanRunning) {
-            qDebug() << "scan process will stop the camera -> flagCancelScanning = true";
-            flagCancelScanning = true;
-        }
-        else {
-            qDebug() << "stopping camera ...";
-            camera->stop();
-        }
-    }
-    else {
-        qDebug() << "camera is already stopped";
     }
 }
 
@@ -193,14 +174,9 @@ void BarcodeScanner::slotLockStatusChanged(QCamera::LockStatus status) {
     qDebug() << "slotLockStatusChanged() is called from " << QThread::currentThread() << " status: " << status;
 
     if (status == QCamera::Locked) {
-        if (flagCancelScanning) {
-            cancelScanning();
-        }
-        else {
-            // 2. capture image
-            qDebug() << "capturing image ...";
-            imageCapture->capture(decoder->getCaptureLocation());
-        }
+        // 2. capture image
+        qDebug() << "capturing image ...";
+        imageCapture->capture(decoder->getCaptureLocation());
     }
 }
 
@@ -210,13 +186,8 @@ void BarcodeScanner::slotImageSaved() {
     camera->unlock();
     qDebug() << "camera unlocked";
 
-    if (flagCancelScanning) {
-        cancelScanning();
-    }
-    else {
-        // 3. decode barcode
-        QtConcurrent::run(this, &BarcodeScanner::processDecode);
-    }
+    // 3. decode barcode
+    QtConcurrent::run(this, &BarcodeScanner::processDecode);
 }
 
 /**
@@ -234,20 +205,6 @@ void BarcodeScanner::processDecode() {
 void BarcodeScanner::slotDecodingFinished() {
     qDebug() << "slotDecodingFinished() is called from " << QThread::currentThread();
     flagScanRunning = false;
-
-    if (flagCancelScanning) {
-        cancelScanning();
-    }
-}
-
-void BarcodeScanner::cancelScanning() {
-    qDebug() << "cancelScanning() is called from " << QThread::currentThread();
-    flagScanRunning = false;
-    flagCancelScanning = false;
-
-    stopCamera();
-
-    emit decodingCanceled();
 }
 
 // ------------------------------------------------------------
@@ -258,20 +215,12 @@ void BarcodeScanner::slotLockFailed() {
     qDebug() << "lock failed";
     flagScanRunning = false;
 
-    if (flagCancelScanning) {
-        cancelScanning();
-    }
-
     emit error(BarcodeScanner::LockFailed);
 }
 
 void BarcodeScanner::slotCaptureFailed() {
     qDebug() << "capture failed";
     flagScanRunning = false;
-
-    if (flagCancelScanning) {
-        cancelScanning();
-    }
 
     emit error(BarcodeScanner::CaptureFailed);
 }

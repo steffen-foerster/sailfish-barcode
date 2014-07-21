@@ -3,8 +3,8 @@ Type=Application
 X-Nemo-Application-Type=silica-qt5
 Icon=harbour-barcode
 Exec=harbour-barcode
-Name=harbour-barcode
+Name=CodeReader
 # translation example:
 # your app name in German locale (de)
-Name[de]=harbour-barcode
+#Name[de]=harbour-barcode
 

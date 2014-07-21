@@ -78,10 +78,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Scanning canceled.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Please close the Jolla Camera app.</source>
         <translation type="unfinished"></translation>
     </message>
