@@ -30,8 +30,9 @@ import harbour.barcode.BarcodeScanner 1.0
 Page {
     id: scanPage
 
-    // decoder format: "QR", "EAN"
-    property string format
+    property variant format
+
+    property variant formatName
 
     property variant scanner
 
@@ -145,7 +146,7 @@ Page {
 
             PageHeader {
                 id: header
-                title: qsTr("Scan %1 code").arg(format)
+                title: qsTr("Scan %1").arg(formatName)
             }
 
             Item {

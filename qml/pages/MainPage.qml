@@ -130,14 +130,23 @@ This restriction helps to avoid an interference of the Camera app.")
             bottom: parent.bottom
         }
 
-        Button {
+        ComboBox {
+            id: codeFormat
+
             anchors {
                 horizontalCenter: parent.horizontalCenter
             }
-            text: "Scan QR code"
-            onClicked: {
-                var scanPage = pageStack.push("ScanPage.qml", {format:"QR"});
-                scanPage.scanned.connect(applyResult);
+            width: parent.width
+            label: "Code Format"
+
+            menu: ContextMenu {
+                MenuItem { text: "QR code" }
+                MenuItem { text: "EAN-8 / EAN-13" }
+                MenuItem { text: "UPC-A / UPC-E" }
+                MenuItem { text: "Data Matrix" }
+                MenuItem { text: "Code-39 / Code-128" }
+                MenuItem { text: "ITF" }
+                MenuItem { text: "Aztec" }
             }
         }
 
@@ -145,9 +154,10 @@ This restriction helps to avoid an interference of the Camera app.")
             anchors {
                 horizontalCenter: parent.horizontalCenter
             }
-            text: "Scan EAN code"
+            text: qsTr("Scan")
             onClicked: {
-                var scanPage = pageStack.push("ScanPage.qml", {format:"EAN"});
+                var scanPage = pageStack.push("ScanPage.qml",
+                    {format:codeFormat.currentIndex, formatName:codeFormat.currentItem.text});
                 scanPage.scanned.connect(applyResult);
             }
         }

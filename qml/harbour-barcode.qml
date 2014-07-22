@@ -31,7 +31,7 @@ ApplicationWindow
     id: window
 
     function getVersion() {
-        return "0.1.2";
+        return "0.1.3";
     }
 
     function openInDefaultBrowser(url) {

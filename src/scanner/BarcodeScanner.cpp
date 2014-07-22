@@ -91,7 +91,7 @@ void BarcodeScanner::componentComplete() {
     flagComponentComplete = true;
 }
 
-void BarcodeScanner::setDecoderFormat(const QString &format) {
+void BarcodeScanner::setDecoderFormat(const int &format) {
     decoder->setDecoderFormat(format);
 }
 

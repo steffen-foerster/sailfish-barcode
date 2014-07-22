@@ -49,13 +49,14 @@ public:
     // see qdeclarativecamera_p.h
     Q_PROPERTY(QObject *mediaObject READ mediaObject NOTIFY mediaObjectChanged SCRIPTABLE false DESIGNABLE false)
 
-    Q_INVOKABLE void setDecoderFormat(const QString &format);
+    Q_INVOKABLE void setDecoderFormat(const int &format);
     Q_INVOKABLE void startScanning();
 
     // page have to stop the camera if application is deactivated
     Q_INVOKABLE void startCamera();
 
     Q_ENUMS(ErrorCode)
+    Q_ENUMS(BarcodeDecoder::CodeFormat)
 
     // must be public, to start in new thread
     void processDecode();

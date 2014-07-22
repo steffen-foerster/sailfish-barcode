@@ -50,6 +50,10 @@
         <source>Note: This app prevents a scan if the Jolla Camera app is running. This restriction helps to avoid an interference of the Camera app.</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Scan</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>ScanPage</name>
@@ -70,15 +74,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Scan %1 code</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>The bar code should be smaller than the red border.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Please close the Jolla Camera app.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scan %1</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
