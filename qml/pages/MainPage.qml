@@ -95,6 +95,7 @@ Page {
                     }
                     color: clickableResult.highlighted ? Theme.highlightColor : Theme.primaryColor
                     font.pixelSize: Theme.fontSizeLarge
+                    font.underline: clickableResult.enabled
                     wrapMode: Text.Wrap
                     width: parent.width
                     text: ""
