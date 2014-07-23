@@ -59,6 +59,17 @@ I hope it is useful for other projects. CodeReader is open source and licensed u
                     left: parent.left
                     margins: Theme.paddingLarge
                 }
+                label: qsTr("Restriction")
+                text: qsTr("This app prevents a scan if the Jolla Camera app is running. \
+This restriction helps to avoid an interference of the Camera app.")
+                separator: true
+            }
+
+            LabelText {
+                anchors {
+                    left: parent.left
+                    margins: Theme.paddingLarge
+                }
                 label: qsTr("Version")
                 text: getVersion()
                 separator: true
@@ -104,7 +115,7 @@ I hope it is useful for other projects. CodeReader is open source and licensed u
                     margins: Theme.paddingLarge
                 }
                 label: qsTr("References")
-                text: qsTr("This project uses code and ideas of other projects, see README.md on Github.")
+                text: qsTr("This project uses code and ideas of other projects, see README.md on Github.\n")
                 separator: false
             }
         }

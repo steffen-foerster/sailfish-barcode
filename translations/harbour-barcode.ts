@@ -28,7 +28,16 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>This project uses code and ideas of other projects, see README.md on Github.</source>
+        <source>Restriction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This app prevents a scan if the Jolla Camera app is running. This restriction helps to avoid an interference of the Camera app.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This project uses code and ideas of other projects, see README.md on Github.
+</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -82,7 +91,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Scan %1</source>
+        <source>About CodeReader</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

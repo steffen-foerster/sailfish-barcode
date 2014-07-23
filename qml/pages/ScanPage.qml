@@ -30,34 +30,62 @@ import harbour.barcode.BarcodeScanner 1.0
 Page {
     id: scanPage
 
-    property variant format
-
-    property variant formatName
-
     property variant scanner
 
     property Item viewFinder
 
-    signal scanned(variant result)
-
     function createScanner() {
+        if (scanner) {
+            console.log("scanner has been already created ...")
+            return
+        }
+
         console.log("creating scanner ...")
-        scanPage.scanner = scannerComponent.createObject(scanPage)
-        scanPage.viewFinder = viewFinderComponent.createObject(parentViewFinder)
-        scanPage.viewFinder.source = scanPage.scanner
+        scanner = scannerComponent.createObject(scanPage)
+        viewFinder = viewFinderComponent.createObject(parentViewFinder)
+        viewFinder.source = scanner
+        viewFinder.startScan.connect(slotStartScan);
+        scanner.startCamera()
     }
 
     function destroyScanner() {
+        if (!scanner) {
+            console.log("scanner has been already destroyed ...")
+            return
+        }
+
         console.log("destroying scanner ...")
-        scanPage.viewFinder.destroy()
-        scanPage.scanner.destroy()
+        viewFinder.destroy()
+        scanner.destroy()
+        scanner = null
+    }
+
+    function applyResult(result) {
+        console.log("result from scan page: " + result)
+
+        if (result.length > 0) {
+            Clipboard.text = result
+            resultText.text = result
+        }
+
+        var urls = result.match(/^http[s]*:\/\/.{3,500}$/);
+        clickableResult.enabled = (urls && urls.length > 0);
+    }
+
+    function slotStartScan() {
+        statusText.text = qsTr("Scan in progress!")
+        resultText.text = ""
+        clickableResult.enabled = false
+        viewFinder.running = true
+        console.log("using format: " + codeFormat.currentIndex)
+        scanner.setDecoderFormat(codeFormat.currentIndex)
+        scanner.startScanning()
     }
 
     onStatusChanged: {
         if (status === PageStatus.Active) {
             console.log("Page is ACTIVE")
             createScanner()
-            scanner.startCamera()
         }
     }
 
@@ -67,14 +95,13 @@ Page {
             if (Qt.application.active) {
                 console.log("application state changed to ACTIVE")
                 createScanner()
-                scanner.startCamera()
             }
             else {
                 console.log("application state changed to INACTIVE")
                 // if the application is deactivated we have to stop the camera and destroy the scanner object
                 // because of power consumption issues and impact to the camera application
+                viewFinder.running = false
                 destroyScanner()
-                busyIndicator.running = false
             }
         }
     }
@@ -92,13 +119,13 @@ Page {
             onDecodingFinished: {
                 console.log("decoding finished, code: ", code)
                 if (code.length > 0) {
-                    pageStack.navigateBack()
-                    scanPage.scanned(code)
+                    applyResult(code)
+                    statusText.text = qsTr("Tap on viewfinder to scan")
                 }
                 else {
                     statusText.text = qsTr("No code detected! Try again.")
                 }
-                busyIndicator.running = false
+                viewFinder.running = false
             }
 
             onError: {
@@ -109,7 +136,7 @@ Page {
                 else {
                     statusText.text = qsTr("Scanning failed (code: %1)! Try again.").arg(errorCode)
                 }
-                busyIndicator.running = false
+                viewFinder.running = false
             }
         }
     }
@@ -118,6 +145,11 @@ Page {
         id: viewFinderComponent
 
         VideoOutput {
+
+            property alias running: busyIndicator.running
+
+            signal startScan()
+
             anchors.fill: parent
             focus : visible // to receive focus and capture key events when visible
             fillMode: VideoOutput.PreserveAspectFit
@@ -126,27 +158,58 @@ Page {
             MouseArea {
                 anchors.fill: parent;
                 onClicked: {
-                    statusText.text = qsTr("Scan in progress!")
-                    busyIndicator.running = true
-                    scanner.setDecoderFormat(format)
-                    scanner.startScanning()
+                    startScan()
                 }
             }
-        }
+
+            BusyIndicator {
+                id: busyIndicator
+                visible: running
+                running: false
+                anchors.centerIn: parent
+                size: BusyIndicatorSize.Large
+            }
+        }    
     }
 
     SilicaFlickable {
+        id: scanPageFlickable
         anchors.fill: parent
-        contentHeight: column.height
+        contentHeight: flickableColumn.height
+
+        PullDownMenu {
+            MenuItem {
+                text: qsTr("About CodeReader")
+                onClicked: {
+                    pageStack.push("AboutPage.qml");
+                }
+            }
+        }
 
         Column {
-            id: column
+            id: flickableColumn
             width: parent.width
             spacing: Theme.paddingLarge
 
-            PageHeader {
-                id: header
-                title: qsTr("Scan %1").arg(formatName)
+            anchors {
+                top: parent.top
+                topMargin: Theme.paddingLarge
+            }
+
+            ComboBox {
+                id: codeFormat
+                width: parent.width
+                label: "Code Format"
+
+                menu: ContextMenu {
+                    MenuItem { text: "QR code" }
+                    MenuItem { text: "EAN-8 / EAN-13" }
+                    MenuItem { text: "UPC-A / UPC-E" }
+                    MenuItem { text: "Data Matrix" }
+                    MenuItem { text: "Code-39 / Code-128" }
+                    MenuItem { text: "ITF" }
+                    MenuItem { text: "Aztec" }
+                }
             }
 
             Item {
@@ -192,13 +255,57 @@ Page {
                 color: Theme.secondaryHighlightColor
             }
 
-            BusyIndicator {
-                id: busyIndicator
-                visible: running
-                running: false
-                anchors.horizontalCenter: parent.horizontalCenter
-                size: BusyIndicatorSize.Large
+            BackgroundItem {
+                id: clickableResult
+                contentHeight: rowResult.height
+                height: contentHeight
+                width: scanPageFlickable.width
+                anchors {
+                    left: parent.left
+                }
+                enabled: false
+
+                Row {
+                    id: rowResult
+                    width: parent.width - 2 * Theme.paddingLarge
+                    height: Math.max(clipboardImg.contentHeight, resultText.contentHeight)
+                    spacing: Theme.paddingLarge
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        margins: Theme.paddingLarge
+                    }
+
+                    Image {
+                        id: clipboardImg
+                        source: "image://theme/icon-m-clipboard"
+                        visible: resultText.text.length > 0
+                        anchors {
+                            leftMargin: Theme.paddingLarge
+                        }
+                    }
+
+                    Label {
+                        id: resultText
+                        anchors {
+                            leftMargin: Theme.paddingLarge
+                            verticalCenter: clipboardImg.verticalCenter
+                        }
+                        color: clickableResult.highlighted ? Theme.highlightColor : Theme.primaryColor
+                        font.pixelSize: Theme.fontSizeMedium
+                        font.underline: clickableResult.enabled
+                        wrapMode: Text.Wrap
+                        width: parent.width - clipboardImg.width - 2 * Theme.paddingLarge
+                        text: ""
+                    }
+                }
+
+                onClicked: {
+                    openInDefaultBrowser(resultText.text);
+                }
             }
         }
     }
+
+    VerticalScrollDecorator { flickable: scanPageFlickable }
 }
