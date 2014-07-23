@@ -51,7 +51,7 @@ BarcodeDecoder::~BarcodeDecoder() {
 }
 
 void BarcodeDecoder::setDecoderFormat(const int &format) {
-    qDebug() << "using decoder format: " + format;
+    qDebug() << "using decoder format: " << format;
     if (format == CodeFormat_QR_CODE) {
         decoder->setDecoder(QZXing::DecoderFormat_QR_CODE);
     }

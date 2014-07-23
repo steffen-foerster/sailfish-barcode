@@ -77,8 +77,6 @@ Page {
         resultText.text = ""
         clickableResult.enabled = false
         viewFinder.running = true
-        console.log("using format: " + codeFormat.currentIndex)
-        scanner.setDecoderFormat(codeFormat.currentIndex)
         scanner.startScanning()
     }
 
@@ -193,23 +191,7 @@ Page {
 
             anchors {
                 top: parent.top
-                topMargin: Theme.paddingLarge
-            }
-
-            ComboBox {
-                id: codeFormat
-                width: parent.width
-                label: "Code Format"
-
-                menu: ContextMenu {
-                    MenuItem { text: "QR code" }
-                    MenuItem { text: "EAN-8 / EAN-13" }
-                    MenuItem { text: "UPC-A / UPC-E" }
-                    MenuItem { text: "Data Matrix" }
-                    MenuItem { text: "Code-39 / Code-128" }
-                    MenuItem { text: "ITF" }
-                    MenuItem { text: "Aztec" }
-                }
+                topMargin: Theme.paddingLarge * 2
             }
 
             Item {

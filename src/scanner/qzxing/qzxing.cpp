@@ -13,8 +13,7 @@ using namespace zxing;
 QZXing::QZXing(QObject *parent) : QObject(parent)
 {
     decoder = new MultiFormatReader();
-    setDecoder(DecoderFormat_QR_CODE);
-    /*setDecoder(DecoderFormat_QR_CODE |
+    setDecoder(DecoderFormat_QR_CODE |
                DecoderFormat_DATA_MATRIX |
                DecoderFormat_UPC_E |
                DecoderFormat_UPC_A |
@@ -23,7 +22,7 @@ QZXing::QZXing(QObject *parent) : QObject(parent)
                DecoderFormat_CODE_128 |
                DecoderFormat_CODE_39 |
                DecoderFormat_ITF |
-               DecoderFormat_Aztec);*/
+               DecoderFormat_Aztec);
 }
 
 QZXing::~QZXing() {
