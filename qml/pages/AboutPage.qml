@@ -115,8 +115,83 @@ This restriction helps to avoid an interference of the Camera app.")
                     margins: Theme.paddingLarge
                 }
                 label: qsTr("References")
-                text: qsTr("This project uses code and ideas of other projects, see README.md on Github.\n")
+                text: qsTr("This project uses code and ideas of other projects, see README.md on Github.")
+                separator: true
+            }
+
+            LabelText {
+                anchors {
+                    left: parent.left
+                    margins: Theme.paddingLarge
+                }
+                label: qsTr("Supported 1D/2D bar codes")
+                text: qsTr("Image source: http://wikipedia.de")
                 separator: false
+            }
+
+            ListModel {
+                id: imageModel
+                ListElement {
+                    name: "QR code"
+                    imgSrc: "img/qr-code_240.png"
+                }
+                ListElement {
+                    name: "Aztec"
+                    imgSrc: "img/aztec_240.png"
+                }
+                ListElement {
+                    name: "Data Matrix"
+                    imgSrc: "img/datamatrix_240.png"
+                }
+                ListElement {
+                    name: "Code 128"
+                    imgSrc: "img/code-128_240.png"
+                }
+                ListElement {
+                    name: "EAN 13"
+                    imgSrc: "img/ean-13_240.png"
+                }
+                ListElement {
+                    name: "Interleaved 2/5"
+                    imgSrc: "img/interleaved_240.png"
+                }
+                ListElement {
+                    name: "UPC-A"
+                    imgSrc: "img/upc_240.png"
+                }
+            }
+
+            SilicaGridView {
+                id: grid
+                width: parent.width
+                height: 180 * 4
+                cellWidth: Screen.width / 2
+                cellHeight: 180
+                quickScroll: false
+                interactive: false
+                model: imageModel
+                delegate: Item {
+                    width: grid.cellWidth
+                    height: grid.cellHeight
+
+                    Image {
+                        source: imgSrc;
+                        anchors {
+                            centerIn: parent
+                        }
+
+                        Text {
+                            text: name;
+                            font.pixelSize: Theme.fontSizeExtraSmall
+                            color: "black"
+                            anchors {
+                                bottomMargin: 2
+                                bottom: parent.bottom
+                                horizontalCenter: parent.horizontalCenter
+                            }
+                        }
+                    }
+                }
             }
         }
     }

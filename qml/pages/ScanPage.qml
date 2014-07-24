@@ -271,7 +271,7 @@ Page {
                         id: resultText
                         anchors {
                             leftMargin: Theme.paddingLarge
-                            verticalCenter: clipboardImg.verticalCenter
+                            top: clipboardImg.top
                         }
                         color: clickableResult.highlighted ? Theme.highlightColor : Theme.primaryColor
                         font.pixelSize: Theme.fontSizeMedium

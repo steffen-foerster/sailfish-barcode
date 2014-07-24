@@ -12,6 +12,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>Supported 1D/2D bar codes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source></source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Restriction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>This app prevents a scan if the Jolla Camera app is running. This restriction helps to avoid an interference of the Camera app.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Version</source>
         <translation type="unfinished"></translation>
     </message>
@@ -28,16 +44,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restriction</source>
+        <source>This project uses code and ideas of other projects, see README.md on Github.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>This app prevents a scan if the Jolla Camera app is running. This restriction helps to avoid an interference of the Camera app.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>This project uses code and ideas of other projects, see README.md on Github.
-</source>
+        <source>Image source: http://wikipedia.de</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

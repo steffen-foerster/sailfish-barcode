@@ -36,7 +36,14 @@ OTHER_FILES += \
     qml/pages/MainPage.qml \
     qml/pages/AboutPage.qml \
     qml/components/LabelText.qml \
-    qml/cover/cover-image.png
+    qml/cover/cover-image.png \
+    qml/pages/img/upc_240.png \
+    qml/pages/img/qr-code_240.png \
+    qml/pages/img/interleaved_240.png \
+    qml/pages/img/ean-13_240.png \
+    qml/pages/img/datamatrix_240.png \
+    qml/pages/img/code-128_240.png \
+    qml/pages/img/aztec_240.png
 
 # to disable building translations every time, comment out the
 # following CONFIG line
