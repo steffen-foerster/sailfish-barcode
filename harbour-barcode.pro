@@ -15,13 +15,15 @@ TARGET = harbour-barcode
 CONFIG += sailfishapp
 
 QT += multimedia \
-    concurrent
+    concurrent \
+    dbus
 
 SOURCES += \
     src/harbour-barcode.cpp \
     src/scanner/ImagePostProcessing.cpp \
     src/scanner/BarcodeScanner.cpp \
-    src/scanner/BarcodeDecoder.cpp
+    src/scanner/BarcodeDecoder.cpp \
+    src/scanner/AutoBarcodeScanner.cpp
 
 OTHER_FILES += \
     qml/cover/CoverPage.qml \
@@ -43,7 +45,8 @@ OTHER_FILES += \
     qml/pages/img/ean-13_240.png \
     qml/pages/img/datamatrix_240.png \
     qml/pages/img/code-128_240.png \
-    qml/pages/img/aztec_240.png
+    qml/pages/img/aztec_240.png \
+    qml/pages/AutoScanPage.qml
 
 # to disable building translations every time, comment out the
 # following CONFIG line
@@ -56,5 +59,6 @@ include(src/scanner/qzxing/QZXing.pri)
 HEADERS += \
     src/scanner/ImagePostProcessing.h \
     src/scanner/BarcodeScanner.h \
-    src/scanner/BarcodeDecoder.h
+    src/scanner/BarcodeDecoder.h \
+    src/scanner/AutoBarcodeScanner.h
 

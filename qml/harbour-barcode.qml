@@ -31,7 +31,7 @@ ApplicationWindow
     id: window
 
     function getVersion() {
-        return "0.2.0";
+        return "0.3.0";
     }
 
     function openInDefaultBrowser(url) {
@@ -40,7 +40,7 @@ ApplicationWindow
             Qt.openUrlExternally(url)
         }
 
-    initialPage: Component { ScanPage { } }
+    initialPage: Component { AutoScanPage { } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
 
     // infoPanel borrowed from https://github.com/veskuh/Tweetian/blob/sailfish-port/qml/tweetian-harmattan/main.qml - Thanks!
