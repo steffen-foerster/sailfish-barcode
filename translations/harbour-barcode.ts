@@ -55,7 +55,7 @@
 <context>
     <name>AutoScanPage</name>
     <message>
-        <source>About CodeReader</source>
+        <source>Scan in progress for %1 seconds!</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -71,11 +71,15 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Scan in progress for %1 seconds!</source>
+        <source>About CodeReader</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Scan</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Abort</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

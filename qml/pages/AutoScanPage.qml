@@ -42,6 +42,8 @@ Page {
 
     property Item viewFinder
 
+    state: "INACTIVE"
+
     Timer {
         id: labelUpdateTimer
         interval: 1000;
@@ -62,8 +64,8 @@ Page {
         scanner = scannerComponent.createObject(scanPage)
         scanner.setViewFinderRect(viewFinder_x, viewFinder_y, viewFinder_width, viewFinder_height)
         viewFinder = viewFinderComponent.createObject(parentViewFinder)
-        viewFinder.viewFinderClicked.connect(startScan);
         viewFinder.source = scanner
+        scanPage.state = "READY"
         scanner.startCamera()
     }
 
@@ -77,8 +79,7 @@ Page {
         viewFinder.destroy()
         scanner.destroy()
         scanner = null
-        labelUpdateTimer.running = false
-        statusText.text = ""
+        scanPage.state = "INACIVE"
     }
 
     function applyResult(result) {
@@ -87,6 +88,7 @@ Page {
         if (result.length > 0) {
             Clipboard.text = result
             resultText.text = result
+            beep.play()
         }
 
         var urls = result.match(/^http[s]*:\/\/.{3,500}$/);
@@ -95,10 +97,7 @@ Page {
 
     function startScan() {
         seconds = scanDuration
-        labelUpdateTimer.running = true
-        statusText.text = qsTr("Scan in progress for %1 seconds!").arg(seconds)
-        resultText.text = ""
-        clickableResult.enabled = false
+        scanPage.state = "SCANNING"
         scanner.startScanning(scanDuration * 1000)
     }
 
@@ -144,18 +143,19 @@ Page {
                 else {
                     statusText.text = qsTr("No code detected! Try again.")
                 }
-                labelUpdateTimer.running = false
+                scanPage.state = "READY"
             }
 
             onError: {
                 console.log("scanning failed: ", errorCode)
                 if (errorCode === BarcodeScanner.JollaCameraRunning) {
                     statusText.text = qsTr("Please close the Jolla Camera app.")
+                    scanPage.state = "JOLLA_CAMERA"
                 }
                 else {
                     statusText.text = qsTr("Scanning failed (code: %1)! Try again.").arg(errorCode)
+                    scanPage.state = "READY"
                 }
-                labelUpdateTimer.running = false
             }
         }
     }
@@ -164,20 +164,18 @@ Page {
         id: viewFinderComponent
 
         VideoOutput {
-            signal viewFinderClicked()
-
             anchors.fill: parent
-            focus : visible // to receive focus and capture key events when visible
+            focus : visible // to receive focus when visible
             fillMode: VideoOutput.PreserveAspectFit
             orientation: -90
-
-            MouseArea {
-                anchors.fill: parent;
-                onClicked: {
-                    viewFinderClicked()
-                }
-            }
         }    
+    }
+
+    SoundEffect {
+        id: beep
+        source: "sound/beep.wav"
+        volume: 1.0
+        muted: true
     }
 
     SilicaFlickable {
@@ -186,6 +184,7 @@ Page {
         contentHeight: flickableColumn.height
 
         PullDownMenu {
+            id: menu
             MenuItem {
                 text: qsTr("About CodeReader")
                 onClicked: {
@@ -210,6 +209,54 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: parent.width * 2/3
                 height: ((parent.width * 2/3) / 3) * 4
+            }
+
+            Row {
+                width: parent.width - Theme.paddingLarge * 2
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                // doesn't work
+                /*
+                IconButton {
+                    id: flash
+
+                    property bool checked: false
+
+                    icon.source: checked
+                                 ? "image://theme/icon-camera-flash-on"
+                                 : "image://theme/icon-camera-flash-off"
+                    onClicked: {
+                        var success = scanner.toggleFlash(flash.checked)
+                        if (!success) {
+                            checked = !checked
+                        }
+                    }
+                }
+                */
+                IconButton {
+                    id: beepSwitch
+
+                    property bool checked: false
+
+                    icon.source: checked
+                                 ? "image://theme/icon-m-speaker"
+                                 : "image://theme/icon-m-speaker-mute"
+                    onClicked: {
+                        checked = !checked
+                        beep.muted = !checked
+                    }
+                }
+                Slider {
+                    id: zoomSlider
+                    width: parent.width - beepSwitch.width
+                    minimumValue: 1.0
+                    maximumValue: 7.0
+                    value: 3.0
+                    stepSize: 0.5
+                    onValueChanged: {
+                        scanner.zoomTo(value)
+                    }
+                }
             }
 
             Text {
@@ -258,10 +305,12 @@ Page {
                             leftMargin: Theme.paddingLarge
                             top: clipboardImg.top
                         }
-                        color: clickableResult.highlighted ? Theme.highlightColor : Theme.primaryColor
+                        color: clickableResult.highlighted || !clickableResult.enabled
+                               ? Theme.highlightColor
+                               : Theme.primaryColor
                         font.pixelSize: Theme.fontSizeMedium
                         font.underline: clickableResult.enabled
-                        wrapMode: Text.Wrap
+                        truncationMode: TruncationMode.Fade
                         width: parent.width - clipboardImg.width - 2 * Theme.paddingLarge
                         text: ""
                     }
@@ -276,16 +325,57 @@ Page {
 
     VerticalScrollDecorator { flickable: scanPageFlickable }
 
-    Button {
+    Rectangle {
+        width: parent.width
+        height: actionButton.height + Theme.paddingLarge * 2
         anchors {
-            horizontalCenter: parent.horizontalCenter
             bottom: parent.bottom
-            bottomMargin: Theme.paddingLarge * 2
         }
-        onClicked: {
-            startScan()
+        z: 10
+        color: "black"
+
+        Button {
+            id: actionButton
+            anchors {
+                centerIn: parent
+            }
+            z: 11
+            onClicked: {
+                if (scanPage.state === "READY") {
+                    startScan()
+                }
+                else if (scanPage.state === "SCANNING") {
+                    scanner.stopScanning()
+                }
+            }
+            text: ""
         }
-        enabled: !labelUpdateTimer.running
-        text: qsTr("Scan")
     }
+
+    states: [
+        State {
+            name: "INACTIVE"
+            PropertyChanges {target: labelUpdateTimer; running: false; restoreEntryValues: false}
+            PropertyChanges {target: statusText; text: ""; restoreEntryValues: false}
+        },
+        State {
+            name: "READY"
+            PropertyChanges {target: labelUpdateTimer; running: false; restoreEntryValues: false}
+            PropertyChanges {target: actionButton; text: qsTr("Scan"); restoreEntryValues: false}
+        },
+        State {
+            name: "SCANNING"
+            PropertyChanges {target: labelUpdateTimer; running: true; restoreEntryValues: false}
+            PropertyChanges {target: statusText; text: qsTr("Scan in progress for %1 seconds!").arg(seconds); restoreEntryValues: false}
+            PropertyChanges {target: resultText; text: ""; restoreEntryValues: false}
+            PropertyChanges {target: clickableResult; enabled: false; restoreEntryValues: false}
+            PropertyChanges {target: actionButton; text: qsTr("Abort"); restoreEntryValues: false}
+        },
+        State {
+            name: "JOLLA_CAMERA"
+            PropertyChanges {target: actionButton; enabled: false; restoreEntryValues: true}
+            PropertyChanges {target: zoomSlider; enabled: false; restoreEntryValues: true}
+            PropertyChanges {target: resultText; text: ""; restoreEntryValues: false}
+        }
+    ]
 }

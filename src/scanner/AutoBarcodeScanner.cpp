@@ -103,8 +103,6 @@ void AutoBarcodeScanner::startCamera() {
     qDebug() << "camera has state: " << m_camera->state();
 
     if (isJollaCameraRunning()) {
-        qDebug() << "jolla camera is running";
-        emit error(AutoBarcodeScanner::JollaCameraRunning);
         return;
     }
 
@@ -119,8 +117,35 @@ void AutoBarcodeScanner::startCamera() {
         m_camera->start();
     }
     else {
-        qDebug() << "camera is already started";
+        qDebug() << "camera has been started already";
     }
+}
+
+bool AutoBarcodeScanner::toggleFlash(bool status) {
+    qDebug() << "camera has state: " << m_camera->state();
+
+    if (isJollaCameraRunning()) {
+        return false;
+    }
+
+    if (m_camera->state() != QCamera::ActiveState) {
+        qDebug() << "camera is not started";
+        return false;
+    }
+
+    if (status) {
+        m_camera->exposure()->setFlashMode(
+                    QCameraExposure::FlashVideoLight
+                    | QCameraExposure::FlashOn);
+    }
+    else {
+        m_camera->exposure()->setFlashMode(QCameraExposure::FlashOff);
+    }
+    return true;
+}
+
+void AutoBarcodeScanner::zoomTo(qreal digitalZoom) {
+    m_camera->focus()->zoomTo(1.0, digitalZoom);
 }
 
 void AutoBarcodeScanner::slotStateChanged(QCamera::State state) {
@@ -138,8 +163,6 @@ void AutoBarcodeScanner::startScanning(int timeout) {
     }
 
     if (isJollaCameraRunning()) {
-        qDebug() << "jolla camera is running";
-        emit error(AutoBarcodeScanner::JollaCameraRunning);
         return;
     }
 
@@ -156,21 +179,35 @@ void AutoBarcodeScanner::startScanning(int timeout) {
     QtConcurrent::run(this, &AutoBarcodeScanner::processDecode);
 }
 
+void AutoBarcodeScanner::stopScanning() {
+    // stopping a running scanning process
+    m_scanProcessMutex.lock();
+    if (m_flagScanRunning) {
+        m_flagScanAbort = true;
+        qDebug() << "m_scanProcessStopped.wait";
+        m_scanProcessStopped.wait(&m_scanProcessMutex);
+    }
+    m_scanProcessMutex.unlock();
+}
+
 bool AutoBarcodeScanner::isJollaCameraRunning() {
-    QProcess *process = new QProcess();
+    QProcess process;
     QString cmd = "/bin/sh";
     QStringList args;
     args << "-c" << "ps -A | grep jolla-camera";
-    process->start(cmd, args);
+    process.start(cmd, args);
 
     bool result = false;
-    if (process->waitForFinished()) {
+    if (process.waitForFinished()) {
         QString output = "";
-        output.append(process->readAllStandardOutput());
+        output.append(process.readAllStandardOutput());
         qDebug() << "result of ps command: " << output;
         result = output.contains("jolla-camera", Qt::CaseInsensitive);
     }
-    delete process;
+
+    if (result) {
+        emit error(AutoBarcodeScanner::JollaCameraRunning);
+    }
     return result;
 }
 
@@ -226,11 +263,11 @@ void AutoBarcodeScanner::processDecode() {
     qDebug() << "decoding has been finished, result: " + code;
     emit decodingFinished(code);
 
-
     m_scanProcessMutex.lock();
     m_flagScanRunning = false;
+    m_timeoutTimer->stop();
 
-    // wake deconstructor
+    // wake deconstructor or stopScanning method
     qDebug() << "m_scanProcessStopped.wakeAll";
     m_scanProcessStopped.wakeAll();
     m_scanProcessMutex.unlock();

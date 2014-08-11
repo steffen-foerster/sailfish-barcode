@@ -50,6 +50,9 @@ public:
     Q_PROPERTY(QObject *mediaObject READ mediaObject NOTIFY mediaObjectChanged SCRIPTABLE false DESIGNABLE false)
 
     Q_INVOKABLE void startScanning(int timeout);
+    Q_INVOKABLE void stopScanning();
+    Q_INVOKABLE bool toggleFlash(bool status);
+    Q_INVOKABLE void zoomTo(qreal digitalZoom);
     Q_INVOKABLE void setDecoderFormat(int format);
     Q_INVOKABLE void setViewFinderRect(int x, int y, int width, int height) {
         m_viewFinderRect = QRect(x, y, width, height);
