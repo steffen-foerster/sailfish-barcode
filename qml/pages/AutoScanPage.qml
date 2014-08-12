@@ -32,6 +32,8 @@ Page {
 
     property variant scanner
 
+    property variant beep
+
     property int seconds
     property int scanDuration: 20
 
@@ -60,11 +62,14 @@ Page {
             return
         }
 
-        console.log("creating scanner ...")
+        console.log("creating scanner and viewfinder ...")
         scanner = scannerComponent.createObject(scanPage)
         scanner.setViewFinderRect(viewFinder_x, viewFinder_y, viewFinder_width, viewFinder_height)
         viewFinder = viewFinderComponent.createObject(parentViewFinder)
         viewFinder.source = scanner
+
+        beep = beepComponent.createObject(scanPage)
+
         scanPage.state = "READY"
         scanner.startCamera()
     }
@@ -75,10 +80,13 @@ Page {
             return
         }
 
-        console.log("destroying scanner ...")
+        console.log("destroying scanner and viewfinder ...")
         viewFinder.destroy()
         scanner.destroy()
         scanner = null
+
+        beep.destroy()
+
         scanPage.state = "INACIVE"
     }
 
@@ -171,11 +179,14 @@ Page {
         }    
     }
 
-    SoundEffect {
-        id: beep
-        source: "sound/beep.wav"
-        volume: 1.0
-        muted: true
+    Component {
+        id: beepComponent
+
+        SoundEffect {
+            source: "sound/beep.wav"
+            volume: 1.0
+            muted: !beepSwitch.checked
+        }
     }
 
     SilicaFlickable {
