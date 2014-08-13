@@ -87,7 +87,7 @@ Page {
 
         beep.destroy()
 
-        scanPage.state = "INACIVE"
+        scanPage.state = "INACTIVE"
     }
 
     function applyResult(result) {
@@ -109,21 +109,27 @@ Page {
         scanner.startScanning(scanDuration * 1000)
     }
 
+    // handles change of active page (AutoScanPage / AboutPage)
     onStatusChanged: {
-        if (status === PageStatus.Active) {
+        if (scanPage.status === PageStatus.Active) {
             console.log("Page is ACTIVE")
             createScanner()
+        }
+        else if (scanPage.status === PageStatus.Inactive) {
+            console.log("Page is INACTIVE")
+            // stop scanning if page is not active
+            destroyScanner()
         }
     }
 
     Connections {
         target: Qt.application
         onActiveChanged: {
-            if (Qt.application.active) {
-                console.log("application state changed to ACTIVE")
+            if (Qt.application.active && scanPage.status === PageStatus.Active) {
+                console.log("application state changed to ACTIVE and AutoScanPage is active")
                 createScanner()
             }
-            else {
+            else if (!Qt.application.active) {
                 console.log("application state changed to INACTIVE")
                 // if the application is deactivated we have to stop the camera and destroy the scanner object
                 // because of power consumption issues and impact to the camera application
@@ -139,17 +145,19 @@ Page {
 
             onCameraStarted: {
                 console.log("camera is started")
-                startScan()
+                //startScan()
             }
 
             onDecodingFinished: {
                 console.log("decoding finished, code: ", code)
-                if (code.length > 0) {
-                    applyResult(code)
-                    statusText.text = ""
-                }
-                else {
-                    statusText.text = qsTr("No code detected! Try again.")
+                statusText.text = ""
+                if (scanPage.state !== "ABORT") {
+                    if (code.length > 0) {
+                        applyResult(code)
+                    }
+                    else {
+                        statusText.text = qsTr("No code detected! Try again.")
+                    }
                 }
                 scanPage.state = "READY"
             }
@@ -356,6 +364,7 @@ Page {
                     startScan()
                 }
                 else if (scanPage.state === "SCANNING") {
+                    scanPage.state = "ABORT"
                     scanner.stopScanning()
                 }
             }
@@ -387,6 +396,10 @@ Page {
             PropertyChanges {target: actionButton; enabled: false; restoreEntryValues: true}
             PropertyChanges {target: zoomSlider; enabled: false; restoreEntryValues: true}
             PropertyChanges {target: resultText; text: ""; restoreEntryValues: false}
+        },
+        State {
+            name: "ABORT"
         }
+
     ]
 }
