@@ -82,65 +82,34 @@
         <source>Abort</source>
         <translation type="unfinished"></translation>
     </message>
-</context>
-<context>
-    <name>MainPage</name>
     <message>
-        <source>About CodeReader</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>CodeReader</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Last result (copied to clipboard):</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Note: This app prevents a scan if the Jolla Camera app is running. This restriction helps to avoid an interference of the Camera app.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Scan</source>
+        <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
-    <name>ScanPage</name>
+    <name>SettingsPage</name>
     <message>
-        <source>No code detected! Try again.</source>
+        <source>Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Scanning failed (code: %1)! Try again.</source>
+        <source>Detection sound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Scan in progress!</source>
+        <source>Scan duration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Tap on viewfinder to scan</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>The bar code should be smaller than the red border.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Please close the Jolla Camera app.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>About CodeReader</source>
+        <source>%1 sec.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>harbour-barcode</name>
     <message>
-        <source>Opening in default browser ...</source>
+        <source>Opening in default app ...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

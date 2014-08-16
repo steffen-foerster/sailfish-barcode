@@ -27,6 +27,8 @@ import QtMultimedia 5.0
 import Sailfish.Silica 1.0
 import harbour.barcode.BarcodeScanner 1.0
 
+import "../js/Settings.js" as Settings
+
 Page {
     id: scanPage
 
@@ -43,18 +45,6 @@ Page {
     property int viewFinder_height: viewFinder_width * (4/3)
 
     property Item viewFinder
-
-    state: "INACTIVE"
-
-    Timer {
-        id: labelUpdateTimer
-        interval: 1000;
-        repeat: true
-        onTriggered: {
-            seconds --
-            statusText.text = qsTr("Scan in progress for %1 seconds!").arg(seconds)
-        }
-    }
 
     function createScanner() {
         if (scanner) {
@@ -99,7 +89,7 @@ Page {
             beep.play()
         }
 
-        var urls = result.match(/^http[s]*:\/\/.{3,500}$/);
+        var urls = result.match(/^(http[s]*:\/\/.{3,500}|www\..{3,500}|sms:\+\d{5,})$/);
         clickableResult.enabled = (urls && urls.length > 0);
     }
 
@@ -109,16 +99,31 @@ Page {
         scanner.startScanning(scanDuration * 1000)
     }
 
-    // handles change of active page (AutoScanPage / AboutPage)
+    state: "INACTIVE"
+
     onStatusChanged: {
         if (scanPage.status === PageStatus.Active) {
             console.log("Page is ACTIVE")
             createScanner()
+
+            // update changeable values
+            beep.muted = !Settings.getBoolean(Settings.keys.SOUND)
+            scanPage.scanDuration = Settings.get(Settings.keys.SCAN_DURATION)
         }
         else if (scanPage.status === PageStatus.Inactive) {
             console.log("Page is INACTIVE")
             // stop scanning if page is not active
             destroyScanner()
+        }
+    }
+
+    Timer {
+        id: labelUpdateTimer
+        interval: 1000;
+        repeat: true
+        onTriggered: {
+            seconds --
+            statusText.text = qsTr("Scan in progress for %1 seconds!").arg(seconds)
         }
     }
 
@@ -145,7 +150,6 @@ Page {
 
             onCameraStarted: {
                 console.log("camera is started")
-                //startScan()
             }
 
             onDecodingFinished: {
@@ -193,7 +197,7 @@ Page {
         SoundEffect {
             source: "sound/beep.wav"
             volume: 1.0
-            muted: !beepSwitch.checked
+            muted: false
         }
     }
 
@@ -208,6 +212,13 @@ Page {
                 text: qsTr("About CodeReader")
                 onClicked: {
                     pageStack.push("AboutPage.qml");
+                    pageStack.push("SettingsPage.qml");
+                }
+            }
+            MenuItem {
+                text: qsTr("Settings")
+                onClicked: {
+                    pageStack.push("SettingsPage.qml");
                 }
             }
         }
@@ -252,28 +263,17 @@ Page {
                     }
                 }
                 */
-                IconButton {
-                    id: beepSwitch
 
-                    property bool checked: false
-
-                    icon.source: checked
-                                 ? "image://theme/icon-m-speaker"
-                                 : "image://theme/icon-m-speaker-mute"
-                    onClicked: {
-                        checked = !checked
-                        beep.muted = !checked
-                    }
-                }
                 Slider {
                     id: zoomSlider
-                    width: parent.width - beepSwitch.width
+                    width: parent.width
                     minimumValue: 1.0
                     maximumValue: 7.0
-                    value: 3.0
-                    stepSize: 0.5
+                    value: Settings.get(Settings.keys.DIGITAL_ZOOM)
+                    stepSize: 1
                     onValueChanged: {
                         scanner.zoomTo(value)
+                        Settings.set(Settings.keys.DIGITAL_ZOOM, value)
                     }
                 }
             }

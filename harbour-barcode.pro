@@ -34,8 +34,6 @@ OTHER_FILES += \
     rpm/harbour-barcode.yaml \
     rpm/harbour-barcode.changes.in \
     qml/harbour-barcode.qml \
-    qml/pages/ScanPage.qml \
-    qml/pages/MainPage.qml \
     qml/pages/AboutPage.qml \
     qml/components/LabelText.qml \
     qml/cover/cover-image.png \
@@ -46,7 +44,10 @@ OTHER_FILES += \
     qml/pages/img/datamatrix_240.png \
     qml/pages/img/code-128_240.png \
     qml/pages/img/aztec_240.png \
-    qml/pages/AutoScanPage.qml
+    qml/pages/AutoScanPage.qml \
+    qml/pages/SettingsPage.qml \
+    qml/js/Settings.js \
+    qml/js/LocalStore.js
 
 # to disable building translations every time, comment out the
 # following CONFIG line

@@ -25,23 +25,29 @@ THE SOFTWARE.
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import "pages"
+import "js/Settings.js" as Settings
 
 ApplicationWindow
 {
     id: window
 
     function getVersion() {
-        return "0.4.2";
+        return "0.5.0";
     }
 
     function openInDefaultBrowser(url) {
-            console.log("opening URL: " + url)
-            infoPanel.showText(qsTr("Opening in default browser ..."), 500, 2000)
-            Qt.openUrlExternally(url)
-        }
+        console.log("opening URL: " + url)
+        infoPanel.showText(qsTr("Opening in default app ..."), 500, 2000)
+        Qt.openUrlExternally(url)
+}
 
     initialPage: Component { AutoScanPage { } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
+
+    Component.onCompleted: {
+        console.log("ApplicationWindow onCompleted");
+        Settings.initialize();
+    }
 
     // infoPanel borrowed from https://github.com/veskuh/Tweetian/blob/sailfish-port/qml/tweetian-harmattan/main.qml - Thanks!
     Rectangle {
