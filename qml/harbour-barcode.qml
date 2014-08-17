@@ -46,7 +46,6 @@ ApplicationWindow
 
     Component.onCompleted: {
         console.log("ApplicationWindow onCompleted");
-        Settings.initialize();
     }
 
     // infoPanel borrowed from https://github.com/veskuh/Tweetian/blob/sailfish-port/qml/tweetian-harmattan/main.qml - Thanks!

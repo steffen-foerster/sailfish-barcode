@@ -53,7 +53,7 @@ Page {
             stepSize: 5
             label: qsTr("Scan duration")
             valueText: qsTr("%1 sec.").arg(value)
-            onValueChanged: {
+            onSliderValueChanged: {
                 Settings.set(Settings.keys.SCAN_DURATION, value)
             }
         }

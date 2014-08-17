@@ -33,8 +33,10 @@ Page {
     id: scanPage
 
     property variant scanner
-
+    property Item viewFinder
     property variant beep
+
+    property bool settingsInitialized: false
 
     property int seconds
     property int scanDuration: 20
@@ -44,7 +46,7 @@ Page {
     property int viewFinder_width: scanPage.width * (2/3)
     property int viewFinder_height: viewFinder_width * (4/3)
 
-    property Item viewFinder
+
 
     function createScanner() {
         if (scanner) {
@@ -104,11 +106,18 @@ Page {
     onStatusChanged: {
         if (scanPage.status === PageStatus.Active) {
             console.log("Page is ACTIVE")
+
+            if (!settingsInitialized) {
+                Settings.initialize();
+                settingsInitialized = true
+            }
+
             createScanner()
 
             // update changeable values
             beep.muted = !Settings.getBoolean(Settings.keys.SOUND)
             scanPage.scanDuration = Settings.get(Settings.keys.SCAN_DURATION)
+            zoomSlider.value = Settings.get(Settings.keys.DIGITAL_ZOOM)
         }
         else if (scanPage.status === PageStatus.Inactive) {
             console.log("Page is INACTIVE")
@@ -269,11 +278,20 @@ Page {
                     width: parent.width
                     minimumValue: 1.0
                     maximumValue: 7.0
-                    value: Settings.get(Settings.keys.DIGITAL_ZOOM)
+                    value: 1
                     stepSize: 1
                     onValueChanged: {
                         scanner.zoomTo(value)
-                        Settings.set(Settings.keys.DIGITAL_ZOOM, value)
+                        saveZoomDelay.restart()
+                    }
+
+                    Timer {
+                        id: saveZoomDelay
+                        interval: 500
+                        onTriggered: {
+                            Settings.set(Settings.keys.DIGITAL_ZOOM, zoomSlider.value)
+                        }
+
                     }
                 }
             }
