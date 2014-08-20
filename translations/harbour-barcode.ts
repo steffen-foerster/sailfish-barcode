@@ -51,6 +51,10 @@
         <source>Image source: http://wikipedia.de</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Contributors</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>AutoScanPage</name>

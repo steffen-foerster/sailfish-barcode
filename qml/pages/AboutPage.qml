@@ -85,6 +85,16 @@ This restriction helps to avoid an interference of the Camera app.")
                 separator: true
             }
 
+            LabelText {
+                anchors {
+                    left: parent.left
+                    margins: Theme.paddingLarge
+                }
+                label: qsTr("Contributors")
+                text: "https://github.com/rssdi"
+                separator: true
+            }
+
             BackgroundItem {
                 id: clickableUrl
                 contentHeight: labelUrl.height
