@@ -99,7 +99,7 @@
     </message>
     <message>
         <source>Detection sound</source>
-        <translation>Tonsignal bei Code-Erkennung</translation>
+        <translation>Signalton bei Code-Erkennung</translation>
     </message>
     <message>
         <source>Scan duration</source>
