@@ -21,11 +21,12 @@
     </message>
     <message>
         <source>Restriction</source>
-        <translation>Restrizioni</translation>
+        <translatorcomment>sembra più corretto di restrizioni</translatorcomment>
+        <translation>Limitazioni</translation>
     </message>
     <message>
         <source>This app prevents a scan if the Jolla Camera app is running. This restriction helps to avoid an interference of the Camera app.</source>
-        <translation>Questa applicazione impedisce la scansione  se l&apos; applicazione Jolla Camera è in esecuzione. Questa restrizione consente di evitare interferenze con l&apos; applicazione Camera.</translation>
+        <translation>Questa applicazione impedisce la scansione  se l&apos;applicazione Camera di Jolla è in esecuzione. Questa limitazione consente di evitare interferenze con l&apos;applicazione Camera.</translation>
     </message>
     <message>
         <source>Version</source>
@@ -41,7 +42,7 @@
     </message>
     <message>
         <source>References</source>
-        <translation>Referenze</translation>
+        <translation>Riferimenti</translation>
     </message>
     <message>
         <source>This project uses code and ideas of other projects, see README.md on Github.</source>
@@ -49,18 +50,18 @@
     </message>
     <message>
         <source>Image source: http://wikipedia.de</source>
-        <translation>Fonte immagine: http://wikipedia.de</translation>
+        <translation>Fonte delle immagini: http://wikipedia.de</translation>
     </message>
     <message>
         <source>Contributors</source>
-        <translation type="unfinished"></translation>
+        <translation>Collaboratori</translation>
     </message>
 </context>
 <context>
     <name>AutoScanPage</name>
     <message>
         <source>Scan in progress for %1 seconds!</source>
-        <translation>Scansione in corso per %1 secondi</translation>
+        <translation>Scansione in corso per %1 secondi!</translation>
     </message>
     <message>
         <source>No code detected! Try again.</source>
@@ -68,7 +69,7 @@
     </message>
     <message>
         <source>Please close the Jolla Camera app.</source>
-        <translation>Per favore chiudi l&apos; applicazione Jolla Camera.</translation>
+        <translation>Per favore chiudi l&apos;applicazione Camera di Jolla.</translation>
     </message>
     <message>
         <source>Scanning failed (code: %1)! Try again.</source>
@@ -99,7 +100,7 @@
     </message>
     <message>
         <source>Detection sound</source>
-        <translation>Souno al rilevamento</translation>
+        <translation>Suono al rilevamento</translation>
     </message>
     <message>
         <source>Scan duration</source>
@@ -114,7 +115,7 @@
     <name>harbour-barcode</name>
     <message>
         <source>Opening in default app ...</source>
-        <translation>Apertura in applicazione predefinita ...</translation>
+        <translation>Apertura nell&apos;applicazione predefinita ...</translation>
     </message>
 </context>
 </TS>
