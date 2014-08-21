@@ -52,7 +52,9 @@ OTHER_FILES += \
 # to disable building translations every time, comment out the
 # following CONFIG line
 CONFIG += sailfishapp_i18n
-TRANSLATIONS += translations/harbour-barcode-it.ts
+TRANSLATIONS += \
+    translations/harbour-barcode-it.ts \
+    translations/harbour-barcode-de.ts
 
 # include library qzxing
 include(src/scanner/qzxing/QZXing.pri)

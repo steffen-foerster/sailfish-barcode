@@ -91,7 +91,7 @@ This restriction helps to avoid an interference of the Camera app.")
                     margins: Theme.paddingLarge
                 }
                 label: qsTr("Contributors")
-                text: "https://github.com/rssdi"
+                text: "Diego Russo"
                 separator: true
             }
 

@@ -5,113 +5,116 @@
     <name>AboutPage</name>
     <message>
         <source>About CodeReader</source>
-        <translation type="unfinished"></translation>
+        <translation>Info über CodeReader</translation>
     </message>
     <message>
         <source>This app demonstrates a bar code reader for Sailfish OS. I hope it is useful for other projects. CodeReader is open source and licensed under the MIT License.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dieses Programm demonstriert einen Barcode-Leser für Sailfish OS. Ich hoffe die App ist nützlich für andere Projekte. CodeReader ist Open Source und ist lizensiert unter der MIT License.</translation>
+    </message>
+    <message>
+        <source>Supported 1D/2D bar codes</source>
+        <translation>Unterstützte Code Formate</translation>
+    </message>
+    <message>
+        <source></source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>Restriction</source>
+        <translation>Einschränkung</translation>
+    </message>
+    <message>
+        <source>This app prevents a scan if the Jolla Camera app is running. This restriction helps to avoid an interference of the Camera app.</source>
+        <translation>CodeReader verhindert das Scannen, wenn das Kamera Programm im Hintergrund läuft. Mit dieser Massnahme wird eine Störung der Kamera-Funktion verhindert.</translation>
     </message>
     <message>
         <source>Version</source>
-        <translation type="unfinished"></translation>
+        <translation>Version</translation>
     </message>
     <message>
         <source>Author</source>
-        <translation type="unfinished"></translation>
+        <translation>Autor</translation>
     </message>
     <message>
         <source>Source code</source>
-        <translation type="unfinished"></translation>
+        <translation>Quellcode</translation>
     </message>
     <message>
         <source>References</source>
-        <translation type="unfinished"></translation>
+        <translation>Referenzen</translation>
     </message>
     <message>
         <source>This project uses code and ideas of other projects, see README.md on Github.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dieses Projekt verwendet Code und Ideen aus anderen Projekten, nähere Informationen befinden sich in der Datei README.md in Github.</translation>
+    </message>
+    <message>
+        <source>Image source: http://wikipedia.de</source>
+        <translation>Bildquelle: http://wikipedia.de</translation>
+    </message>
+    <message>
+        <source>Contributors</source>
+        <translation>Mitwirkende</translation>
     </message>
 </context>
 <context>
-    <name>CoverPage</name>
+    <name>AutoScanPage</name>
     <message>
-        <source>My Cover</source>
-        <translation type="obsolete">Mein Cover</translation>
+        <source>Scan in progress for %1 seconds!</source>
+        <translation>Scanvorgang läuft, %1 Sekunden!</translation>
     </message>
-</context>
-<context>
-    <name>FirstPage</name>
-    <message>
-        <source>Show Page 2</source>
-        <translation type="obsolete">Zur Seite 2</translation>
-    </message>
-    <message>
-        <source>UI Template</source>
-        <translation type="obsolete">UI-Vorlage</translation>
-    </message>
-    <message>
-        <source>Hello Sailors</source>
-        <translation type="obsolete">Hallo Matrosen</translation>
-    </message>
-</context>
-<context>
-    <name>MainPage</name>
-    <message>
-        <source>About CodeReader</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>CodeReader</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Last result (saved in clipboard)</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>ScanPage</name>
     <message>
         <source>No code detected! Try again.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kein Code erkannt! Bitte nochmal versuchen.</translation>
+    </message>
+    <message>
+        <source>Please close the Jolla Camera app.</source>
+        <translation>Bitte schliesse das Kamera Programm.</translation>
     </message>
     <message>
         <source>Scanning failed (code: %1)! Try again.</source>
-        <translation type="unfinished"></translation>
+        <translation>Scannen fehlgeschlagen (Code: %1)! Bitte nochmal versuchen.</translation>
     </message>
     <message>
-        <source>Scan in progress!</source>
-        <translation type="unfinished"></translation>
+        <source>About CodeReader</source>
+        <translation>Info über CodeReader</translation>
     </message>
     <message>
-        <source>Tap on viewfinder to scan</source>
-        <translation type="unfinished"></translation>
+        <source>Scan</source>
+        <translation>Scannen</translation>
     </message>
     <message>
-        <source>Scan %1 code</source>
-        <translation type="unfinished"></translation>
+        <source>Abort</source>
+        <translation>Abbrechen</translation>
     </message>
     <message>
-        <source>The bar code should be smaller than the red border.</source>
-        <translation type="unfinished"></translation>
+        <source>Settings</source>
+        <translation>Einstellungen</translation>
     </message>
 </context>
 <context>
-    <name>SecondPage</name>
+    <name>SettingsPage</name>
     <message>
-        <source>Nested Page</source>
-        <translation type="obsolete">Unterseite</translation>
+        <source>Settings</source>
+        <translation>Einstellungen</translation>
     </message>
     <message>
-        <source>Item</source>
-        <translation type="obsolete">Element</translation>
+        <source>Detection sound</source>
+        <translation>Tonsignal bei Code-Erkennung</translation>
+    </message>
+    <message>
+        <source>Scan duration</source>
+        <translation>Dauer eines Scans</translation>
+    </message>
+    <message>
+        <source>%1 sec.</source>
+        <translation>%1 Sekunden</translation>
     </message>
 </context>
 <context>
     <name>harbour-barcode</name>
     <message>
-        <source>Opening in default browser ...</source>
-        <translation type="unfinished"></translation>
+        <source>Opening in default app ...</source>
+        <translation>Öffnen im Standardprogramm ...</translation>
     </message>
 </context>
 </TS>

@@ -30,7 +30,7 @@ THE SOFTWARE.
 
 .import QtQuick.LocalStorage 2.0 as Sql
 
-var private = {
+var privateScope = {
     getDatabase : function() {
         return Sql.LocalStorage.openDatabaseSync("CodeReader", "1.0", "Database of application CodeReader", 100000);
     }
@@ -42,7 +42,7 @@ var private = {
 
 function initializeDatabase(defaultSettings) {
     console.log("initializing database");
-    var db = private.getDatabase();
+    var db = privateScope.getDatabase();
     db.transaction(function(tx) {
         initializeSettings(defaultSettings, tx);
     });
@@ -63,14 +63,14 @@ function initializeSettings(defaultSettings, tx) {
 
 function set(key, value) {
     console.debug("saving setting " + key);
-    var db = private.getDatabase();
+    var db = privateScope.getDatabase();
     db.transaction(function (tx) {
         tx.executeSql('INSERT OR REPLACE INTO settings VALUES(?, ?);', [key, value]);
     });
 }
 
 function get(key) {
-    var db = private.getDatabase();
+    var db = privateScope.getDatabase();
     var retval = undefined;
     db.transaction(function (tx) {
         var res = tx.executeSql('SELECT value FROM settings WHERE key = ?;', [key]);
