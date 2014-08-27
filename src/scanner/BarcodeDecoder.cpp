@@ -28,13 +28,12 @@ THE SOFTWARE.
 #include <QImage>
 #include "qzxing/qzxing.h"
 #include "BarcodeDecoder.h"
-#include "ImagePostProcessing.h"
 
 BarcodeDecoder::BarcodeDecoder(QObject *parent) : QObject(parent)
 {
     // prepare cache directory
     QString cacheFolderLocation = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
-    cacheCaptureLocation = cacheFolderLocation + "/capture_qrcode.jpg";
+    cacheCaptureLocation = cacheFolderLocation + "/capture_code.jpg";
     QDir cacheDir(cacheFolderLocation);
 
     if (!cacheDir.exists()) {
@@ -43,6 +42,7 @@ BarcodeDecoder::BarcodeDecoder(QObject *parent) : QObject(parent)
 
     // ZXing
     decoder = new QZXing();
+
 }
 
 BarcodeDecoder::~BarcodeDecoder() {
@@ -82,16 +82,8 @@ QString BarcodeDecoder::getCaptureLocation() const {
     return cacheCaptureLocation;
 }
 
-QString BarcodeDecoder::decodeBarcodeFromCache() {
+QVariantHash BarcodeDecoder::decodeBarcodeFromCache() {
     QImage img(cacheCaptureLocation);
-
-    // improve image to get better decoding result
-    QImage * origin = &img;
-    QImage * improvedImage = ImagePostProcessing::improveImage(origin);
-
-    QVariantHash result = decoder->decodeImageEx((*improvedImage));
-
-    delete improvedImage;
-
-    return result["content"].toString();
+    QVariantHash result = decoder->decodeImageEx(img);
+    return result;
 }

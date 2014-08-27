@@ -22,46 +22,20 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef BARCODEDECODER_H
-#define BARCODEDECODER_H
+#include "CaptureImageProvider.h"
 
-#include <QObject>
-#include <QString>
-#include "qzxing/qzxing.h"
+QImage CaptureImageProvider::markedImage;
 
-class BarcodeDecoder : public QObject
+QImage CaptureImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
 {
-    Q_OBJECT
+    Q_UNUSED(size)
+    Q_UNUSED(requestedSize)
 
-    Q_PROPERTY(QString captureLocation READ getCaptureLocation)
+    QImage img;
 
-public:
-    explicit BarcodeDecoder(QObject *parent = 0);
-    virtual ~BarcodeDecoder();
+    if (id == "marked") {
+        img = CaptureImageProvider::markedImage;
+    }
 
-    QVariantHash decodeBarcodeFromCache();
-
-    void setDecoderFormat(const int &format);
-    QString getCaptureLocation() const;
-
-    enum CodeFormat {
-        CodeFormat_QR_CODE = 0,
-        CodeFormat_EAN = 1,
-        CodeFormat_UPC = 2,
-        CodeFormat_DATA_MATRIX = 3,
-        CodeFormat_CODE_39_128 = 4,
-        CodeFormat_ITF = 5,
-        CodeFormat_Aztec = 6
-    };
-
-signals:
-
-public slots:
-
-private:
-    QString cacheCaptureLocation;
-    class QZXing *decoder;
-
-};
-
-#endif // BARCODEDECODER_H
+    return img;
+}

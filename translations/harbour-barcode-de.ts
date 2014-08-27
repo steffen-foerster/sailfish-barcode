@@ -106,8 +106,20 @@
         <translation>Dauer eines Scans</translation>
     </message>
     <message>
-        <source>%1 sec.</source>
+        <source>%1 seconds</source>
         <translation>%1 Sekunden</translation>
+    </message>
+    <message>
+        <source>deactivated</source>
+        <translation>deaktiviert</translation>
+    </message>
+    <message>
+        <source>Select marker color</source>
+        <translation>Farbe der Markierung auswählen</translation>
+    </message>
+    <message>
+        <source>Mark detected code</source>
+        <translation>Erkannten Code markieren</translation>
     </message>
 </context>
 <context>

@@ -46,8 +46,6 @@ Page {
     property int viewFinder_width: scanPage.width * (2/3)
     property int viewFinder_height: viewFinder_width * (4/3)
 
-
-
     function createScanner() {
         if (scanner) {
             console.log("scanner has been already created ...")
@@ -97,8 +95,26 @@ Page {
 
     function startScan() {
         seconds = scanDuration
+
+        viewFinder.children[0].source = ""
+        viewFinder.children[0].visible = false
+
+        setMarkerColor()
+
         scanPage.state = "SCANNING"
-        scanner.startScanning(scanDuration * 1000)
+        scanDelayTimer.restart() // we need time to hide the marked image
+    }
+
+    function setMarkerColor() {
+        var markerColor = Settings.get(Settings.keys.MARKER_COLOR)
+        console.log("marker color: ", markerColor)
+
+        var red =  parseInt(markerColor.substr(1, 2), 16)
+        var green =  parseInt(markerColor.substr(3, 2), 16)
+        var blue =  parseInt(markerColor.substr(5, 2), 16)
+
+        console.log("red: ", red, " green: ", green, " blue: ", blue)
+        scanner.setMarkerColor(red, green, blue)
     }
 
     state: "INACTIVE"
@@ -123,6 +139,25 @@ Page {
             console.log("Page is INACTIVE")
             // stop scanning if page is not active
             destroyScanner()
+        }
+    }
+
+    Timer {
+        id: scanDelayTimer
+        interval: 500;
+        repeat: false
+        onTriggered: {
+            scanner.startScanning(scanDuration * 1000)
+        }
+    }
+
+    Timer {
+        id: resultViewTimer
+        interval: 0;
+        repeat: false
+        onTriggered: {
+            viewFinder.children[0].source = ""
+            viewFinder.children[0].visible = false
         }
     }
 
@@ -167,6 +202,14 @@ Page {
                 if (scanPage.state !== "ABORT") {
                     if (code.length > 0) {
                         applyResult(code)
+
+                        var resultViewDuration = Settings.get(Settings.keys.RESULT_VIEW_DURATION)
+                        if (resultViewDuration > 0) {
+                            viewFinder.children[0].source = "image://scanner/marked"
+                            viewFinder.children[0].visible = true
+                            resultViewTimer.interval = resultViewDuration * 1000
+                            resultViewTimer.restart()
+                        }
                     }
                     else {
                         statusText.text = qsTr("No code detected! Try again.")
@@ -194,10 +237,19 @@ Page {
 
         VideoOutput {
             anchors.fill: parent
-            focus : visible // to receive focus when visible
+            //focus: visible // to receive focus when visible
             fillMode: VideoOutput.PreserveAspectFit
             orientation: -90
-        }    
+
+            Image {
+                id: markerImage
+                anchors.fill: parent
+                z: 2
+                source: ""
+                visible: false
+                cache: false
+            }
+        }
     }
 
     Component {
@@ -418,6 +470,5 @@ Page {
         State {
             name: "ABORT"
         }
-
     ]
 }

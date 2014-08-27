@@ -21,9 +21,9 @@ QT += multimedia \
 SOURCES += \
     src/harbour-barcode.cpp \
     src/scanner/ImagePostProcessing.cpp \
-    src/scanner/BarcodeScanner.cpp \
     src/scanner/BarcodeDecoder.cpp \
-    src/scanner/AutoBarcodeScanner.cpp
+    src/scanner/AutoBarcodeScanner.cpp \
+    src/scanner/CaptureImageProvider.cpp
 
 OTHER_FILES += \
     qml/cover/CoverPage.qml \
@@ -61,7 +61,7 @@ include(src/scanner/qzxing/QZXing.pri)
 
 HEADERS += \
     src/scanner/ImagePostProcessing.h \
-    src/scanner/BarcodeScanner.h \
     src/scanner/BarcodeDecoder.h \
-    src/scanner/AutoBarcodeScanner.h
+    src/scanner/AutoBarcodeScanner.h \
+    src/scanner/CaptureImageProvider.h
 

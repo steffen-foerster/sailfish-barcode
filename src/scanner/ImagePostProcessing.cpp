@@ -40,7 +40,7 @@ QImage * ImagePostProcessing::improveImage(QImage *origin) {
     //scaledImage.save("/home/nemo/.cache/harbour-marker/harbour-marker/scaled.jpg", "JPG");
 
     QImage * greyedImage = greyScale(&scaledImage);
-    //greyedImage->save("/home/nemo/.cache/harbour-marker/harbour-marker/greyed.jpg", "JPG");
+    //greyedImage->save("/home/nemo/.cache/harbour-barcode/harbour-barcode/greyed.jpg", "JPG");
 
     //QImage * sharpenedImage = greyScale(greyedImage);
     //sharpenedImage->save("/home/nemo/.cache/harbour-marker/harbour-marker/sharpened.jpg", "JPG");
@@ -51,7 +51,7 @@ QImage * ImagePostProcessing::improveImage(QImage *origin) {
 /**
  * Converting the given image to grey scale.
  */
-QImage * ImagePostProcessing::greyScale(QImage *origin){
+QImage * ImagePostProcessing::greyScale(QImage *origin) {
     QImage * newImage = new QImage(origin->width(), origin->height(), QImage::Format_ARGB32);
 
     for(int y = 0; y < newImage->height(); y++){
@@ -62,10 +62,10 @@ QImage * ImagePostProcessing::greyScale(QImage *origin){
             //int gray = (qRed(line[x]) + qGreen(line[x]) + qBlue(line[x]))/3;
 
             // method: luma
-            //int gray = (0.2126 * qRed(line[x]) + 0.7152 * qGreen(line[x]) + 0.0722 * qBlue(line[x])) / 3;
+            int gray = (0.2126 * qRed(line[x]) + 0.7152 * qGreen(line[x]) + 0.0722 * qBlue(line[x])) / 3;
 
             // method: decomposition using maximum values
-            int gray = qMax(qMax(qRed(line[x]), qGreen(line[x])), qBlue(line[x]));
+            //int gray = qMax(qMax(qRed(line[x]), qGreen(line[x])), qBlue(line[x]));
 
             newImage->setPixel(x, y, qRgb(gray, gray, gray));
         }
@@ -77,7 +77,7 @@ QImage * ImagePostProcessing::greyScale(QImage *origin){
 /**
  * Sharpening of the given image.
  */
-QImage * ImagePostProcessing::sharpen(QImage *origin){
+QImage * ImagePostProcessing::sharpen(QImage *origin) {
     QImage * newImage = new QImage(* origin);
 
     int kernel [5][5]= {{0,0,0,0,0},

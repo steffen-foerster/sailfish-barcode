@@ -29,7 +29,9 @@ THE SOFTWARE.
 var keys = {
     SOUND: "sound",
     DIGITAL_ZOOM: "digital_zoom",
-    SCAN_DURATION: "scan_duration"
+    SCAN_DURATION: "scan_duration",
+    RESULT_VIEW_DURATION: "result_view_duration",
+    MARKER_COLOR: "marker_color"
 }
 
 var dBValues = {
@@ -61,7 +63,9 @@ function initialize() {
     var defaultValues = {
         sound: dBValues.B_FALSE,
         digital_zoom: 3,
-        scan_duration: 20
+        scan_duration: 20,
+        result_view_duration: 2,
+        marker_color: "#00FF00"
     }
 
     LocalStore.initializeDatabase(defaultValues);

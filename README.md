@@ -31,6 +31,7 @@ THE SOFTWARE.
 
 - The code of the info panel is borrowed from the application Tweetian https://github.com/veskuh/Tweetian/blob/sailfish-port/qml/tweetian-harmattan/main.qml
 - The image processing uses code from http://developer.nokia.com/community/wiki/Image_editing_techniques_and_algorithms_using_Qt
+- The color picker dialog uses code from https://github.com/kimmoli/paint
 
 ## Third libraries
 

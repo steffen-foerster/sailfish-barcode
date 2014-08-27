@@ -24,7 +24,10 @@ THE SOFTWARE.
 
 #include <QDebug>
 #include "AutoBarcodeScanner.h"
+#include "CaptureImageProvider.h"
 #include <QProcess>
+#include <QPainter>
+#include <QBrush>
 #include <QStandardPaths>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
@@ -48,6 +51,8 @@ AutoBarcodeScanner::AutoBarcodeScanner(QObject * parent) : QObject(parent)
     m_flagComponentComplete = false;
     m_flagScanRunning = false;
     m_flagScanAbort = false;
+
+    m_markerColor = QColor(0, 255, 0); // default green
 
     createConnections();
     createTimer();
@@ -219,6 +224,7 @@ void AutoBarcodeScanner::processDecode() {
 
     bool scanActive = true;
     QString code = "";
+    QVariantHash result;
 
     while (scanActive) {
         // timeout timer and deconstructor can abort scan process
@@ -240,24 +246,31 @@ void AutoBarcodeScanner::processDecode() {
             QImage copy = screenshot.copy(m_viewFinderRect);
             copy.save(m_decoder->getCaptureLocation());
 
-            code = m_decoder->decodeBarcodeFromCache();
+            result = m_decoder->decodeBarcodeFromCache();
+            code = result["content"].toString();
 
-            if (!code.length()) {
+            if (code.length() == 0) {
                 // try for 1D bar code the other orientation
                 QTransform transform;
                 transform.rotate(90);
                 copy = copy.transformed(transform);
                 copy.save(m_decoder->getCaptureLocation());
 
-                code = m_decoder->decodeBarcodeFromCache();
+                result = m_decoder->decodeBarcodeFromCache();
+                code = result["content"].toString();
             }
 
-            if (code.length()) {
+            if (code.length() > 0) {
                 m_timeoutTimer->stop();
                 scanActive = false;
                 qDebug() << "bar code found";
             }
         }
+    }
+
+    if (!result.empty()) {
+        QList<QVariant> points = result["points"].toList();
+        markLastCaptureImage(points);
     }
 
     qDebug() << "decoding has been finished, result: " + code;
@@ -271,6 +284,31 @@ void AutoBarcodeScanner::processDecode() {
     qDebug() << "m_scanProcessStopped.wakeAll";
     m_scanProcessStopped.wakeAll();
     m_scanProcessMutex.unlock();
+}
+
+void AutoBarcodeScanner::markLastCaptureImage(QList<QVariant> &points) {
+    QImage lastScreenshot(m_decoder->getCaptureLocation());
+    QPainter painter(&lastScreenshot);
+    painter.setPen(m_markerColor);
+
+    qDebug() << "recognized points: " << points.size();
+    for (int i = 0; i < points.size(); i++) {
+        QPoint p = points[i].toPoint();
+        painter.fillRect(QRect(p.x()-3, p.y()-15, 6, 30), QBrush(m_markerColor));
+        painter.fillRect(QRect(p.x()-15, p.y()-3, 30, 6), QBrush(m_markerColor));
+    }
+    painter.end();
+
+    // rotate to screen orientation
+    if (lastScreenshot.width() > lastScreenshot.height()) {
+        qDebug() << "rotating image ...";
+        QTransform transform;
+        transform.rotate(270);
+        lastScreenshot = lastScreenshot.transformed(transform);
+        qDebug() << "rotation finished";
+    }
+
+    CaptureImageProvider::setMarkedImage(lastScreenshot);
 }
 
 void AutoBarcodeScanner::slotScanningTimeout() {

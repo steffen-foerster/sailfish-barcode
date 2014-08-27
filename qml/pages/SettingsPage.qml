@@ -3,6 +3,8 @@ The MIT License (MIT)
 
 Copyright (c) 2014 Steffen Förster
 
+This page uses code from: https://github.com/kimmoli/paint/blob/master/qml/pages/penSettingsDialog.qml
+
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -30,7 +32,23 @@ import "../js/Settings.js" as Settings
 Page {
     id: settingsPage
 
+    property var colors: [ "#FF0080", "#FF0000", "#FF8000", "#FFFF00", "#00FF00",
+                           "#8000FF", "#00FFFF", "#0000FF" ]
+
+    property int currentColor: getColorFromSettings()
+
+    function getColorFromSettings() {
+        var savedColor = Settings.get(Settings.keys.MARKER_COLOR)
+        for	(var i = 0; i < colors.length; i++) {
+            if (savedColor === colors[i]) {
+                return i
+            }
+        }
+        return 0
+    }
+
     Column {
+        id: col
         width: parent.width
         spacing: Theme.paddingLarge
 
@@ -45,26 +63,73 @@ Page {
         }
 
         Slider {
-            id: timeSlider
             width: parent.width
             minimumValue: 5.0
             maximumValue: 60.0
             value: Settings.get(Settings.keys.SCAN_DURATION)
             stepSize: 5
             label: qsTr("Scan duration")
-            valueText: qsTr("%1 sec.").arg(value)
+            valueText: qsTr("%1 seconds").arg(value)
             onSliderValueChanged: {
                 Settings.set(Settings.keys.SCAN_DURATION, value)
             }
         }
 
         IconTextSwitch {
-            id: beepSwitch
             checked: Settings.getBoolean(Settings.keys.SOUND)
             text: qsTr("Detection sound")
             icon.source: "image://theme/icon-m-speaker"
             onCheckedChanged: {
                 Settings.setBoolean(Settings.keys.SOUND, checked)
+            }
+        }
+
+        SectionHeader {
+            text: qsTr("Select marker color")
+        }
+
+        Grid {
+            id: colorSelector
+            columns: 4
+
+            Repeater {
+                model: colors
+
+                Rectangle {
+                    width: col.width/colorSelector.columns
+                    height: col.width/colorSelector.columns
+                    radius: Theme.paddingLarge
+                    color: (index == currentColor) ? colors[index] : "transparent"
+
+                    Rectangle {
+                        width: parent.width - 2 * Theme.paddingLarge
+                        height: parent.height - 2 * Theme.paddingLarge
+                        radius: Theme.paddingLarge
+                        color: colors[index]
+                        anchors.centerIn: parent
+                    }
+
+                    BackgroundItem {
+                        anchors.fill: parent
+                        onClicked: {
+                            currentColor = index
+                            Settings.set(Settings.keys.MARKER_COLOR, colors[index])
+                        }
+                    }
+                }
+            }
+        }
+
+        Slider {
+            width: parent.width
+            minimumValue: 0
+            maximumValue: 15
+            value: Settings.get(Settings.keys.RESULT_VIEW_DURATION)
+            stepSize: 1
+            label: qsTr("Mark detected code")
+            valueText: value === 0 ? qsTr("deactivated") : qsTr("%1 seconds").arg(value)
+            onSliderValueChanged: {
+                Settings.set(Settings.keys.RESULT_VIEW_DURATION, value)
             }
         }
     }

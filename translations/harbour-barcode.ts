@@ -106,7 +106,19 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 sec.</source>
+        <source>%1 seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>deactivated</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Select marker color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Mark detected code</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
