@@ -198,6 +198,7 @@ Page {
 
             onDecodingFinished: {
                 console.log("decoding finished, code: ", code)
+                labelUpdateTimer.running = false
                 statusText.text = ""
                 if (scanPage.state !== "ABORT") {
                     if (code.length > 0) {
