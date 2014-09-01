@@ -54,6 +54,7 @@ OTHER_FILES += \
 CONFIG += sailfishapp_i18n
 TRANSLATIONS += \
     translations/harbour-barcode-it.ts \
+	translations/harbour-barcode-sv.ts \
     translations/harbour-barcode-de.ts
 
 # include library qzxing

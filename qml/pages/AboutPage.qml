@@ -91,7 +91,7 @@ This restriction helps to avoid an interference of the Camera app.")
                     margins: Theme.paddingLarge
                 }
                 label: qsTr("Contributors")
-                text: "Diego Russo"
+                text: "Diego Russo, Åke Engelbrektson"
                 separator: true
             }
 
