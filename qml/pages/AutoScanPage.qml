@@ -25,9 +25,10 @@ THE SOFTWARE.
 import QtQuick 2.1
 import QtMultimedia 5.0
 import Sailfish.Silica 1.0
-import harbour.barcode.BarcodeScanner 1.0
+import harbour.barcode.AutoBarcodeScanner 1.0
 
 import "../js/Settings.js" as Settings
+import "../js/History.js" as History
 
 Page {
     id: scanPage
@@ -60,7 +61,6 @@ Page {
 
         beep = beepComponent.createObject(scanPage)
 
-        scanPage.state = "READY"
         scanner.startCamera()
     }
 
@@ -77,7 +77,7 @@ Page {
 
         beep.destroy()
 
-        scanPage.state = "INACTIVE"
+        stateInactive()
     }
 
     function applyResult(result) {
@@ -85,12 +85,10 @@ Page {
 
         if (result.length > 0) {
             Clipboard.text = result
-            resultText.text = result
+            clickableResult.setValue(result)
+            History.addHistoryValue(result)
             beep.play()
         }
-
-        var urls = result.match(/^(http[s]*:\/\/.{3,500}|www\..{3,500}|sms:\+\d{5,})$/);
-        clickableResult.enabled = (urls && urls.length > 0);
     }
 
     function startScan() {
@@ -101,7 +99,7 @@ Page {
 
         setMarkerColor()
 
-        scanPage.state = "SCANNING"
+        stateScanning()
         scanDelayTimer.restart() // we need time to hide the marked image
     }
 
@@ -115,6 +113,45 @@ Page {
 
         console.log("red: ", red, " green: ", green, " blue: ", blue)
         scanner.setMarkerColor(red, green, blue)
+    }
+
+    function stateInactive() {
+        state = "INACTIVE"
+        labelUpdateTimer.running = false
+        statusText.text = ""
+        actionButton.enabled = false
+    }
+
+    function stateReady() {
+        state = "READY"
+        labelUpdateTimer.running = false
+        actionButton.text = qsTr("Scan")
+        actionButton.visible = true
+        actionButton.enabled = true
+        zoomSlider.enabled = true
+    }
+
+    function stateScanning() {
+        state = "SCANNING"
+        labelUpdateTimer.running = true
+        statusText.text = qsTr("Scan in progress for %1 seconds!").arg(seconds)
+        clickableResult.clear()
+        actionButton.text = qsTr("Abort")
+    }
+
+    function stateJollaCamera() {
+        state = "JOLLA_CAMERA"
+        clickableResult.clear()
+        statusText.text = qsTr("Please close the Jolla Camera app.")
+        actionButton.visible = false
+        actionButton.enabled = false
+        zoomSlider.enabled = false
+    }
+
+    function stateAbort() {
+        state = "ABORT"
+        actionButton.enabled = false
+        scanner.stopScanning()
     }
 
     state: "INACTIVE"
@@ -156,8 +193,10 @@ Page {
         interval: 0;
         repeat: false
         onTriggered: {
-            viewFinder.children[0].source = ""
-            viewFinder.children[0].visible = false
+            if (viewFinder) {
+                viewFinder.children[0].source = ""
+                viewFinder.children[0].visible = false
+            }
         }
     }
 
@@ -194,6 +233,7 @@ Page {
 
             onCameraStarted: {
                 console.log("camera is started")
+                stateReady()
             }
 
             onDecodingFinished: {
@@ -216,18 +256,17 @@ Page {
                         statusText.text = qsTr("No code detected! Try again.")
                     }
                 }
-                scanPage.state = "READY"
+                stateReady()
             }
 
             onError: {
                 console.log("scanning failed: ", errorCode)
-                if (errorCode === BarcodeScanner.JollaCameraRunning) {
-                    statusText.text = qsTr("Please close the Jolla Camera app.")
-                    scanPage.state = "JOLLA_CAMERA"
+                if (errorCode === AutoBarcodeScanner.JollaCameraRunning) {
+                    stateJollaCamera()
                 }
                 else {
                     statusText.text = qsTr("Scanning failed (code: %1)! Try again.").arg(errorCode)
-                    scanPage.state = "READY"
+                    stateReady()
                 }
             }
         }
@@ -274,7 +313,6 @@ Page {
                 text: qsTr("About CodeReader")
                 onClicked: {
                     pageStack.push("AboutPage.qml");
-                    pageStack.push("SettingsPage.qml");
                 }
             }
             MenuItem {
@@ -361,6 +399,49 @@ Page {
 
             BackgroundItem {
                 id: clickableResult
+
+                property bool isLink: false
+
+                property string text: ""
+
+                function setValue(text) {
+                    var urls = text.match(/^(http[s]*:\/\/.{3,500}|www\..{3,500}|sms:\+\d{5,})$/);
+                    var vcard = text.match(/^(.+VCARD.+)$/);
+                    // is a known url scheme and not a vcard
+                    if (urls && urls.length > 0 && !(vcard && vcard.length > 0)) {
+                        setLink(text)
+                    }
+                    else {
+                        setText(text)
+                    }
+                }
+
+                function clear() {
+                    clickableResult.enabled = false
+                    clickableResult.isLink = false
+                    clickableResult.text = ""
+                    resultText.text = ""
+                    resultText.width = rowResult.width - clipboardImg.width - 2 * Theme.paddingLarge
+                }
+
+                function setLink(link) {
+                    clickableResult.enabled = true
+                    clickableResult.isLink = true
+                    clickableResult.text = link
+                    resultText.text = link
+                    resultText.width = rowResult.width - clipboardImg.width - 2 * Theme.paddingLarge
+                }
+
+                function setText(text) {
+                    clickableResult.enabled = true
+                    clickableResult.isLink = false
+                    clickableResult.text = text
+                    var shortenText = text.replace("\n", " ")
+                    resultText.text = shortenText.length > 15 ? shortenText.substr(0, 15) + "..." : shortenText
+                    resultText.width =
+                            rowResult.width - clipboardImg.width - arrowRightImg.width - 2 * Theme.paddingLarge
+                }
+
                 contentHeight: rowResult.height
                 height: contentHeight
                 width: scanPageFlickable.width
@@ -395,19 +476,33 @@ Page {
                             leftMargin: Theme.paddingLarge
                             top: clipboardImg.top
                         }
-                        color: clickableResult.highlighted || !clickableResult.enabled
+                        color: clickableResult.highlighted
                                ? Theme.highlightColor
                                : Theme.primaryColor
                         font.pixelSize: Theme.fontSizeMedium
-                        font.underline: clickableResult.enabled
+                        font.underline: clickableResult.isLink
                         truncationMode: TruncationMode.Fade
                         width: parent.width - clipboardImg.width - 2 * Theme.paddingLarge
                         text: ""
                     }
+
+                    Image {
+                        id: arrowRightImg
+                        source: "image://theme/icon-m-right"
+                        visible: clickableResult.text.length > 0 && !clickableResult.isLink
+                        anchors {
+                            leftMargin: Theme.paddingLarge
+                        }
+                    }
                 }
 
                 onClicked: {
-                    openInDefaultBrowser(resultText.text);
+                    if (clickableResult.isLink) {
+                        openInDefaultBrowser(clickableResult.text);
+                    }
+                    else {
+                        pageStack.push("TextPage.qml", {text: clickableResult.text});
+                    }
                 }
             }
         }
@@ -435,14 +530,15 @@ Page {
                     startScan()
                 }
                 else if (scanPage.state === "SCANNING") {
-                    scanPage.state = "ABORT"
-                    scanner.stopScanning()
+                    stateAbort()
                 }
             }
             text: ""
+            enabled: false
         }
     }
 
+    /*
     states: [
         State {
             name: "INACTIVE"
@@ -472,4 +568,5 @@ Page {
             name: "ABORT"
         }
     ]
+    */
 }

@@ -47,7 +47,9 @@ OTHER_FILES += \
     qml/pages/AutoScanPage.qml \
     qml/pages/SettingsPage.qml \
     qml/js/Settings.js \
-    qml/js/LocalStore.js
+    qml/js/LocalStore.js \
+    qml/pages/TextPage.qml \
+    qml/js/History.js
 
 # to disable building translations every time, comment out the
 # following CONFIG line

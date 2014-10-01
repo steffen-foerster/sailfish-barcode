@@ -45,6 +45,7 @@ function initializeDatabase(defaultSettings) {
     var db = privateScope.getDatabase();
     db.transaction(function(tx) {
         initializeSettings(defaultSettings, tx);
+        initializeHistory(tx)
     });
 }
 
@@ -55,6 +56,11 @@ function initializeSettings(defaultSettings, tx) {
                       [key, defaultSettings[key]]);
     }
     console.debug("Table SETTINGS initialized");
+}
+
+function initializeHistory(tx) {
+    tx.executeSql('CREATE TABLE IF NOT EXISTS history(value TEXT, timestamp TEXT)');
+    console.debug("Table HISTORY initialized");
 }
 
 // ------------------------------------------------------------
@@ -81,5 +87,86 @@ function get(key) {
             retval = undefined;
         }
     });
+    return retval;
+}
+
+// ------------------------------------------------------------
+// History
+// ------------------------------------------------------------
+
+function getHistorySize() {
+    var db = privateScope.getDatabase();
+    var retval = 0;
+    db.transaction(function (tx) {
+        var res = tx.executeSql('SELECT count(*) size FROM history;');
+        retval = res.rows.item(0).size
+    });
+    console.log("history size: ", retval);
+    return retval;
+}
+
+function addHistoryValue(value) {
+    console.log("add history value: ", value);
+    var db = privateScope.getDatabase();
+    db.transaction(function (tx) {
+        tx.executeSql('INSERT INTO history (value, timestamp) VALUES(?, ?);', [value, new Date().toISOString()]);
+    });
+}
+
+function removeHistoryValue(historyValue) {
+    console.log("remove history value, rowid: ", historyValue.rowid, ", value: ", historyValue.value);
+    var db = privateScope.getDatabase();
+    db.transaction(function (tx) {
+        tx.executeSql('DELETE FROM history WHERE ROWID = ?;', [historyValue.rowid]);
+    });
+}
+
+function removeAllHistoryValues() {
+    console.log("remove all history values");
+    var db = privateScope.getDatabase();
+    db.transaction(function (tx) {
+        tx.executeSql('DELETE FROM history;');
+    });
+}
+
+function getAllHistoryValues() {
+    var db = privateScope.getDatabase();
+    var retval = [];
+    db.transaction(function (tx) {
+        var res = tx.executeSql('SELECT rowid, value, timestamp FROM history ORDER BY timestamp DESC;');
+        retval = createHistoryItems(res);
+    });
+    console.log("history items: ", retval.length);
+    return retval;
+}
+
+function applyNewHistorySize(newSize) {
+    console.log("apply history size: " + newSize)
+    var historyValues = getAllHistoryValues();
+    if (historyValues.length > newSize) {
+        for (var i = newSize; i < historyValues.length; i++) {
+            removeHistoryValue(historyValues[i]);
+        }
+    }
+}
+
+function removeOldestHistoryValue() {
+    console.log("remove oldest history value")
+    var db = privateScope.getDatabase();
+    db.transaction(function (tx) {
+        tx.executeSql('DELETE FROM history WHERE timestamp = (SELECT MIN(timestamp) FROM history);');
+    });
+}
+
+function createHistoryItems(resultSet) {
+    var retval = [];
+    for (var i = 0; i < resultSet.rows.length; i++) {
+        var item = {
+            rowid: resultSet.rows.item(i).rowid,
+            value: resultSet.rows.item(i).value,
+            timestamp: new Date(resultSet.rows.item(i).timestamp)
+        };
+        retval.push(item);
+    }
     return retval;
 }

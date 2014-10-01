@@ -28,6 +28,7 @@ import QtQuick 2.1
 import Sailfish.Silica 1.0
 
 import "../js/Settings.js" as Settings
+import "../js/History.js" as History
 
 Page {
     id: settingsPage
@@ -47,19 +48,52 @@ Page {
         return 0
     }
 
+    SilicaFlickable {
+        id: settingsPageFlickable
+        anchors.fill: parent
+        contentHeight: col.height
+
     Column {
         id: col
         width: parent.width
+        height: childrenRect.height + 2 * Theme.paddingLarge
         spacing: Theme.paddingLarge
 
+        anchors {
+            left: parent.left;
+            right: parent.right
+            leftMargin: Theme.paddingLarge
+            rightMargin: Theme.paddingLarge * 2
+        }
+
+        /*
         anchors {
             fill: parent
             leftMargin: Theme.paddingLarge
             rightMargin: Theme.paddingLarge
         }
+        */
 
         PageHeader {
             title: qsTr("Settings")
+        }
+
+        IconTextSwitch {
+            checked: Settings.getBoolean(Settings.keys.SOUND)
+            text: qsTr("Detection sound")
+            icon.source: "image://theme/icon-m-speaker"
+            onCheckedChanged: {
+                Settings.setBoolean(Settings.keys.SOUND, checked)
+            }
+        }
+
+        IconTextSwitch {
+            checked: Settings.getBoolean(Settings.keys.SCAN_ON_START)
+            text: qsTr("Scan on start")
+            icon.source: "image://theme/icon-m-play"
+            onCheckedChanged: {
+                Settings.setBoolean(Settings.keys.SCAN_ON_START, checked)
+            }
         }
 
         Slider {
@@ -75,12 +109,55 @@ Page {
             }
         }
 
-        IconTextSwitch {
-            checked: Settings.getBoolean(Settings.keys.SOUND)
-            text: qsTr("Detection sound")
-            icon.source: "image://theme/icon-m-speaker"
-            onCheckedChanged: {
-                Settings.setBoolean(Settings.keys.SOUND, checked)
+        SectionHeader {
+            property int count: History.getHistorySize()
+            id: headerHistory
+            text: qsTr("History settings (count: %1)").arg(count)
+        }
+
+        Slider {
+            id: historySizeSlider
+            width: parent.width
+            minimumValue: 0
+            maximumValue: 100
+            value: Settings.get(Settings.keys.HISTORY_SIZE)
+            stepSize: 10
+            label: qsTr("History size")
+            valueText: value === 0 ? qsTr("deactivated") : qsTr("%1 items").arg(value)
+            onSliderValueChanged: {
+                var currentSize = History.getHistorySize()
+                if (value < currentSize) {
+                    historyConfirmButtons.visible = true
+                }
+                else {
+                    historyConfirmButtons.visible = false
+                    Settings.set(Settings.keys.HISTORY_SIZE, value)
+                }
+            }
+        }
+
+        Row {
+            id: historyConfirmButtons
+            width: parent.width
+            visible: false
+
+            Button {
+                width: parent.width / 2
+                text: qsTr("Confirm resize")
+                onClicked: {
+                    History.applyNewHistorySize(historySizeSlider.value)
+                    Settings.set(Settings.keys.HISTORY_SIZE, historySizeSlider.value)
+                    historyConfirmButtons.visible = false
+                    headerHistory.count = History.getHistorySize()
+                }
+            }
+
+            Button {
+                width: parent.width / 2
+                text: qsTr("Cancel")
+                onClicked: {
+                    historyConfirmButtons.visible = false
+                }
             }
         }
 
@@ -132,5 +209,10 @@ Page {
                 Settings.set(Settings.keys.RESULT_VIEW_DURATION, value)
             }
         }
+
     }
+
+    }
+
+    VerticalScrollDecorator { flickable: settingsPageFlickable }
 }

@@ -25,52 +25,38 @@ THE SOFTWARE.
 .pragma library
 
 .import "LocalStore.js" as LocalStore
+.import "Settings.js" as Settings
 
-var keys = {
-    SOUND: "sound",
-    DIGITAL_ZOOM: "digital_zoom",
-    SCAN_DURATION: "scan_duration",
-    RESULT_VIEW_DURATION: "result_view_duration",
-    MARKER_COLOR: "marker_color",
-    HISTORY_SIZE: "history_size",
-    SCAN_ON_START: "scan_on_start"
+function getAllHistoryValues() {
+    LocalStore.getAllHistoryValues();
 }
 
-var dBValues = {
-    B_TRUE: "true",
-    B_FALSE: "false"
+function getHistorySize() {
+    return LocalStore.getHistorySize();
 }
 
-function get(key) {
-    return LocalStore.get(key);
+function applyNewHistorySize(newSize) {
+    LocalStore.applyNewHistorySize(newSize);
 }
 
-function getBoolean(key) {
-    return LocalStore.get(key) === dBValues.B_TRUE;
-}
+function addHistoryValue(value) {
+    var maxSize = parseInt(Settings.get(Settings.keys.HISTORY_SIZE));
+    var historySize = getHistorySize();
 
-function set(key, value) {
-    LocalStore.set(key, value);
-}
-
-function setBoolean(key, value) {
-    var booleanStr = value ? dBValues.B_TRUE : dBValues.B_FALSE;
-    LocalStore.set(key, booleanStr);
-}
-
-/**
- * Should be invoked after application start.
- */
-function initialize() {
-    var defaultValues = {
-        sound: dBValues.B_FALSE,
-        digital_zoom: 3,
-        scan_duration: 20,
-        result_view_duration: 2,
-        marker_color: "#00FF00",
-        history_size: 20,
-        scan_on_start: dBValues.B_FALSE
+    if (historySize > maxSize) {
+        LocalStore.applyNewHistorySize(maxSize);
+        historySize = maxSize;
     }
+    if (historySize === maxSize) {
+        LocalStore.removeOldestHistoryValue();
+    }
+    LocalStore.addHistoryValue(value)
+}
 
-    LocalStore.initializeDatabase(defaultValues);
+function removeHistoryValue(historyValue) {
+    LocalStore.removeHistoryValue(historyValue);
+}
+
+function removeAllHistoryValues() {
+    LocalStore.removeAllHistoryValues();
 }

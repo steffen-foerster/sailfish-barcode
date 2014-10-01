@@ -117,6 +117,41 @@
         <source>deactivated</source>
         <translation>désactivée</translation>
     </message>
+    <message>
+        <source>History size</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>%1 items</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>History settings (count: %1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirm resize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scan on start</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>TextPage</name>
+    <message>
+        <source>Decoded text</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Copy selection</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>harbour-barcode</name>
