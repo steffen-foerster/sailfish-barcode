@@ -93,27 +93,46 @@
     </message>
 </context>
 <context>
-    <name>SettingsPage</name>
-    <message>
-        <source>Settings</source>
-        <translation>Impostazioni</translation>
-    </message>
+    <name>Settings1View</name>
     <message>
         <source>Detection sound</source>
-        <translation>Suono al rilevamento</translation>
+        <translation type="unfinished">Suono al rilevamento</translation>
+    </message>
+    <message>
+        <source>Scan on start</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Scan duration</source>
-        <translation>Durata scansione</translation>
+        <translation type="unfinished">Durata scansione</translation>
     </message>
     <message>
         <source>%1 seconds</source>
-        <translation>%1 secondi</translation>
+        <translation type="unfinished">%1 secondi</translation>
     </message>
     <message>
         <source>deactivated</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>%1 items</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirm resize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max history size (saved values: %1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Settings2View</name>
     <message>
         <source>Select marker color</source>
         <translation type="unfinished"></translation>
@@ -123,27 +142,42 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>History size</source>
+        <source>deactivated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cancel</source>
+        <source>%1 seconds</source>
+        <translation type="unfinished">%1 secondi</translation>
+    </message>
+</context>
+<context>
+    <name>SettingsPage</name>
+    <message>
+        <source>Settings</source>
+        <translation type="obsolete">Impostazioni</translation>
+    </message>
+    <message>
+        <source>Detection sound</source>
+        <translation type="obsolete">Suono al rilevamento</translation>
+    </message>
+    <message>
+        <source>Scan duration</source>
+        <translation type="obsolete">Durata scansione</translation>
+    </message>
+    <message>
+        <source>%1 seconds</source>
+        <translation type="obsolete">%1 secondi</translation>
+    </message>
+    <message>
+        <source>Settings %1/2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 items</source>
+        <source>Marker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>History settings (count: %1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Confirm resize</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Scan on start</source>
+        <source>Scan and history</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

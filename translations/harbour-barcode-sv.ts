@@ -92,49 +92,29 @@
     </message>
 </context>
 <context>
-    <name>SettingsPage</name>
-    <message>
-        <source>Settings</source>
-        <translation>Inställningar</translation>
-    </message>
+    <name>Settings1View</name>
     <message>
         <source>Detection sound</source>
-        <translation>Detektionsljud</translation>
+        <translation type="unfinished">Detektionsljud</translation>
+    </message>
+    <message>
+        <source>Scan on start</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Scan duration</source>
-        <translation>Skanningsförlopp</translation>
+        <translation type="unfinished">Skanningsförlopp</translation>
     </message>
     <message>
         <source>%1 seconds</source>
-        <translation>%1 sekunder</translation>
+        <translation type="unfinished">%1 sekunder</translation>
     </message>
     <message>
         <source>deactivated</source>
-        <translation>inaktiverad</translation>
-    </message>
-    <message>
-        <source>Select marker color</source>
-        <translation>Välj markeringsfärg</translation>
-    </message>
-    <message>
-        <source>Mark detected code</source>
-        <translation>Markera upptäckt kod</translation>
-    </message>
-    <message>
-        <source>History size</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">inaktiverad</translation>
     </message>
     <message>
         <source>%1 items</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>History settings (count: %1)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -142,7 +122,73 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Scan on start</source>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max history size (saved values: %1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Settings2View</name>
+    <message>
+        <source>Select marker color</source>
+        <translation type="unfinished">Välj markeringsfärg</translation>
+    </message>
+    <message>
+        <source>Mark detected code</source>
+        <translation type="unfinished">Markera upptäckt kod</translation>
+    </message>
+    <message>
+        <source>deactivated</source>
+        <translation type="unfinished">inaktiverad</translation>
+    </message>
+    <message>
+        <source>%1 seconds</source>
+        <translation type="unfinished">%1 sekunder</translation>
+    </message>
+</context>
+<context>
+    <name>SettingsPage</name>
+    <message>
+        <source>Settings</source>
+        <translation type="obsolete">Inställningar</translation>
+    </message>
+    <message>
+        <source>Detection sound</source>
+        <translation type="obsolete">Detektionsljud</translation>
+    </message>
+    <message>
+        <source>Scan duration</source>
+        <translation type="obsolete">Skanningsförlopp</translation>
+    </message>
+    <message>
+        <source>%1 seconds</source>
+        <translation type="obsolete">%1 sekunder</translation>
+    </message>
+    <message>
+        <source>deactivated</source>
+        <translation type="obsolete">inaktiverad</translation>
+    </message>
+    <message>
+        <source>Select marker color</source>
+        <translation type="obsolete">Välj markeringsfärg</translation>
+    </message>
+    <message>
+        <source>Mark detected code</source>
+        <translation type="obsolete">Markera upptäckt kod</translation>
+    </message>
+    <message>
+        <source>Settings %1/2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Marker</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scan and history</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

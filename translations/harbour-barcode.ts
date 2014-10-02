@@ -92,13 +92,13 @@
     </message>
 </context>
 <context>
-    <name>SettingsPage</name>
+    <name>Settings1View</name>
     <message>
-        <source>Settings</source>
+        <source>Detection sound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Detection sound</source>
+        <source>Scan on start</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -114,6 +114,25 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <source>%1 items</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Confirm resize</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Max history size (saved values: %1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>Settings2View</name>
+    <message>
         <source>Select marker color</source>
         <translation type="unfinished"></translation>
     </message>
@@ -122,27 +141,26 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>History size</source>
+        <source>deactivated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Cancel</source>
+        <source>%1 seconds</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SettingsPage</name>
+    <message>
+        <source>Settings %1/2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>%1 items</source>
+        <source>Marker</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>History settings (count: %1)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Confirm resize</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>Scan on start</source>
+        <source>Scan and history</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

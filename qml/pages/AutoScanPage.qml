@@ -37,7 +37,8 @@ Page {
     property Item viewFinder
     property variant beep
 
-    property bool settingsInitialized: false
+    property bool flagAutoScan: true
+    property bool flagScanByCover: false
 
     property int seconds
     property int scanDuration: 20
@@ -60,6 +61,7 @@ Page {
         viewFinder.source = scanner
 
         beep = beepComponent.createObject(scanPage)
+        beep.muted = !Settings.getBoolean(Settings.keys.SOUND)
 
         scanner.startCamera()
     }
@@ -94,13 +96,19 @@ Page {
     function startScan() {
         seconds = scanDuration
 
+        // hide marker image
         viewFinder.children[0].source = ""
         viewFinder.children[0].visible = false
 
         setMarkerColor()
 
         stateScanning()
-        scanDelayTimer.restart() // we need time to hide the marked image
+        scanner.startScanning(scanDuration * 1000)
+    }
+
+    function abortScan() {
+        stateAbort()
+        scanner.stopScanning()
     }
 
     function setMarkerColor() {
@@ -151,7 +159,6 @@ Page {
     function stateAbort() {
         state = "ABORT"
         actionButton.enabled = false
-        scanner.stopScanning()
     }
 
     state: "INACTIVE"
@@ -160,31 +167,16 @@ Page {
         if (scanPage.status === PageStatus.Active) {
             console.log("Page is ACTIVE")
 
-            if (!settingsInitialized) {
-                Settings.initialize();
-                settingsInitialized = true
-            }
-
-            createScanner()
-
             // update changeable values
-            beep.muted = !Settings.getBoolean(Settings.keys.SOUND)
             scanPage.scanDuration = Settings.get(Settings.keys.SCAN_DURATION)
             zoomSlider.value = Settings.get(Settings.keys.DIGITAL_ZOOM)
+
+            createScanner()
         }
         else if (scanPage.status === PageStatus.Inactive) {
             console.log("Page is INACTIVE")
             // stop scanning if page is not active
             destroyScanner()
-        }
-    }
-
-    Timer {
-        id: scanDelayTimer
-        interval: 500;
-        repeat: false
-        onTriggered: {
-            scanner.startScanning(scanDuration * 1000)
         }
     }
 
@@ -234,6 +226,13 @@ Page {
             onCameraStarted: {
                 console.log("camera is started")
                 stateReady()
+
+                if (flagScanByCover || flagAutoScan && Settings.getBoolean(Settings.keys.SCAN_ON_START)) {
+                    flagAutoScan = false
+                    flagScanByCover = false
+
+                    startScan();
+                }
             }
 
             onDecodingFinished: {
@@ -530,7 +529,7 @@ Page {
                     startScan()
                 }
                 else if (scanPage.state === "SCANNING") {
-                    stateAbort()
+                    abortScan()
                 }
             }
             text: ""

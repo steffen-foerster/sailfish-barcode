@@ -32,20 +32,32 @@ ApplicationWindow
     id: window
 
     function getVersion() {
-        return "0.6.2";
+        return "0.7.0"
     }
 
     function openInDefaultBrowser(url) {
         console.log("opening URL: " + url)
         infoPanel.showText(qsTr("Opening in default app ..."), 500, 2000)
         Qt.openUrlExternally(url)
-}
+    }
 
-    initialPage: Component { AutoScanPage { } }
+    function getMainPage() {
+        return mainPage
+    }
+
+    //initialPage: Component { AutoScanPage { } }
+    initialPage:  Component { Page {} }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
 
     Component.onCompleted: {
-        console.log("ApplicationWindow onCompleted");
+        console.log("ApplicationWindow onCompleted")
+        Settings.initialize()
+        pageStack.replace(mainPage)
+    }
+
+    Component {
+        id: mainPage
+        AutoScanPage {}
     }
 
     // infoPanel borrowed from https://github.com/veskuh/Tweetian/blob/sailfish-port/qml/tweetian-harmattan/main.qml - Thanks!
@@ -60,24 +72,24 @@ ApplicationWindow
         z: 10
 
         function showText(text, delayTime, closeTime) {
-            infoText.text = text;
-            console.log("INFO: " + text);
+            infoText.text = text
+            console.log("INFO: " + text)
 
-            delayTimer.interval = !delayTime ? 0 : delayTime;
-            closeTimer.interval = !closeTime ? 5000 : closeTime;
+            delayTimer.interval = !delayTime ? 0 : delayTime
+            closeTimer.interval = !closeTime ? 5000 : closeTime
 
-            delayTimer.restart();
+            delayTimer.restart()
         }
 
         function showError(error) {
-            var msg = error.errorMessage + "\n" + error.detailMessage;
-            showText(msg);
+            var msg = error.errorMessage + "\n" + error.detailMessage
+            showText(msg)
         }
 
         function performShow() {
-            infoPanel.opacity = 1;
-            infoPanel.visible = true;
-            closeTimer.restart();
+            infoPanel.opacity = 1
+            infoPanel.visible = true
+            closeTimer.restart()
         }
 
         Label {
@@ -106,7 +118,7 @@ ApplicationWindow
         Timer {
             id: delayTimer
             onTriggered: {
-                infoPanel.performShow();
+                infoPanel.performShow()
             }
         }
 
