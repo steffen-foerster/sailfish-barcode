@@ -29,6 +29,7 @@ import harbour.barcode.AutoBarcodeScanner 1.0
 
 import "../js/Settings.js" as Settings
 import "../js/History.js" as History
+import "../js/Utils.js" as Utils
 
 Page {
     id: scanPage
@@ -404,10 +405,7 @@ Page {
                 property string text: ""
 
                 function setValue(text) {
-                    var urls = text.match(/^(http[s]*:\/\/.{3,500}|www\..{3,500}|sms:\+\d{5,})$/);
-                    var vcard = text.match(/^(.+VCARD.+)$/);
-                    // is a known url scheme and not a vcard
-                    if (urls && urls.length > 0 && !(vcard && vcard.length > 0)) {
+                    if (Utils.isLink(text)) {
                         setLink(text)
                     }
                     else {
@@ -435,8 +433,7 @@ Page {
                     clickableResult.enabled = true
                     clickableResult.isLink = false
                     clickableResult.text = text
-                    var shortenText = text.replace("\n", " ")
-                    resultText.text = shortenText.length > 15 ? shortenText.substr(0, 15) + "..." : shortenText
+                    resultText.text = Utils.shortenText(text, 15)
                     resultText.width =
                             rowResult.width - clipboardImg.width - arrowRightImg.width - 2 * Theme.paddingLarge
                 }
@@ -497,10 +494,10 @@ Page {
 
                 onClicked: {
                     if (clickableResult.isLink) {
-                        openInDefaultBrowser(clickableResult.text);
+                        openInDefaultApp(clickableResult.text)
                     }
                     else {
-                        pageStack.push("TextPage.qml", {text: clickableResult.text});
+                        pageStack.push("TextPage.qml", {text: clickableResult.text})
                     }
                 }
             }

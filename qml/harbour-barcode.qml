@@ -35,7 +35,7 @@ ApplicationWindow
         return "0.7.0"
     }
 
-    function openInDefaultBrowser(url) {
+    function openInDefaultApp(url) {
         console.log("opening URL: " + url)
         infoPanel.showText(qsTr("Opening in default app ..."), 500, 2000)
         Qt.openUrlExternally(url)
