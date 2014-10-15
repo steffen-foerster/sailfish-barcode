@@ -137,6 +137,7 @@ Page {
         }
 
         PullDownMenu {
+            visible: historyModel.count > 0
             MenuItem {
                 text: qsTr("Delete all")
                 onClicked: {
@@ -147,7 +148,6 @@ Page {
                         },
                         5000)
                 }
-                enabled: historyModel.count > 0
             }
         }
 

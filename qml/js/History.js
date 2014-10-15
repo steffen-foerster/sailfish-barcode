@@ -41,6 +41,11 @@ function applyNewHistorySize(newSize) {
 
 function addHistoryValue(value) {
     var maxSize = parseInt(Settings.get(Settings.keys.HISTORY_SIZE));
+
+    if (maxSize === 0) {
+        return;
+    }
+
     var historySize = getHistorySize();
 
     if (historySize > maxSize) {
