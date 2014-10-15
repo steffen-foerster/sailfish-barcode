@@ -28,7 +28,7 @@ THE SOFTWARE.
 .import "Settings.js" as Settings
 
 function getAllHistoryValues() {
-    LocalStore.getAllHistoryValues();
+    return LocalStore.getAllHistoryValues();
 }
 
 function getHistorySize() {
@@ -59,4 +59,13 @@ function removeHistoryValue(historyValue) {
 
 function removeAllHistoryValues() {
     LocalStore.removeAllHistoryValues();
+}
+
+function copyValue(historyValue) {
+    var copy = {
+        rowid: historyValue.rowid,
+        value: historyValue.value,
+        timestamp: historyValue.timestamp
+    };
+    return copy;
 }

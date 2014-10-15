@@ -321,6 +321,12 @@ Page {
                     pageStack.push("SettingsPage.qml");
                 }
             }
+            MenuItem {
+                text: qsTr("History")
+                onClicked: {
+                    pageStack.push("HistoryPage.qml");
+                }
+            }
         }
 
         Column {
@@ -372,8 +378,10 @@ Page {
                     value: 1
                     stepSize: 1
                     onValueChanged: {
-                        scanner.zoomTo(value)
-                        saveZoomDelay.restart()
+                        if (scanner) {
+                            scanner.zoomTo(value)
+                            saveZoomDelay.restart()
+                        }
                     }
 
                     Timer {
@@ -533,36 +541,4 @@ Page {
             enabled: false
         }
     }
-
-    /*
-    states: [
-        State {
-            name: "INACTIVE"
-            PropertyChanges {target: labelUpdateTimer; running: false; restoreEntryValues: false}
-            PropertyChanges {target: statusText; text: ""; restoreEntryValues: false}
-        },
-        State {
-            name: "READY"
-            PropertyChanges {target: labelUpdateTimer; running: false; restoreEntryValues: false}
-            PropertyChanges {target: actionButton; text: qsTr("Scan"); restoreEntryValues: false}
-        },
-        State {
-            name: "SCANNING"
-            PropertyChanges {target: labelUpdateTimer; running: true; restoreEntryValues: false}
-            PropertyChanges {target: statusText; text: qsTr("Scan in progress for %1 seconds!").arg(seconds); restoreEntryValues: false}
-            PropertyChanges {target: resultText; text: ""; restoreEntryValues: false}
-            PropertyChanges {target: clickableResult; enabled: false; restoreEntryValues: false}
-            PropertyChanges {target: actionButton; text: qsTr("Abort"); restoreEntryValues: false}
-        },
-        State {
-            name: "JOLLA_CAMERA"
-            PropertyChanges {target: actionButton; enabled: false; restoreEntryValues: true}
-            PropertyChanges {target: zoomSlider; enabled: false; restoreEntryValues: true}
-            PropertyChanges {target: resultText; text: ""; restoreEntryValues: false}
-        },
-        State {
-            name: "ABORT"
-        }
-    ]
-    */
 }

@@ -35,7 +35,22 @@ function isText(text) {
     return !isLink(text);
 }
 
+function removeLineBreak(text) {
+    return text.replace(/\n/g, " ");
+}
+
 function shortenText(text, maxLength) {
-    var shortenText = text.replace("\n", " ")
-    return shortenText.length > maxLength ? shortenText.substr(0, maxLength) + "..." : shortenText
+    var shortenText = text.replace(/\n/g, " ");
+    return shortenText.length > maxLength ? shortenText.substr(0, maxLength) + "..." : shortenText;
+}
+
+function formatTimestamp(timestamp) {
+    var hours = ("00" + timestamp.getHours()).slice(-2);
+    var minutes = ("00" + timestamp.getMinutes()).slice(-2);
+    var seconds = ("00" + timestamp.getSeconds()).slice(-2);
+    var year = timestamp.getFullYear();
+    var month = ("00" + (timestamp.getMonth() + 1)).slice(-2);
+    var day = ("00" + timestamp.getDate()).slice(-2);
+
+    return year + "-" + month + "-" + day + "   " + hours + ":" + minutes + ":" + seconds;
 }

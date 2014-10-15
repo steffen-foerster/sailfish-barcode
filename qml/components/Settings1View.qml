@@ -77,14 +77,6 @@ Item {
             }
         }
 
-        /*
-        SectionHeader {
-            property int count: History.getHistorySize()
-            id: headerHistory
-            text: qsTr("History settings (count: %1)").arg(count)
-        }
-        */
-
         Slider {
             id: historySizeSlider
 

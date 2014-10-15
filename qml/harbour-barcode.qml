@@ -45,7 +45,6 @@ ApplicationWindow
         return mainPage
     }
 
-    //initialPage: Component { AutoScanPage { } }
     initialPage:  Component { Page {} }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
 

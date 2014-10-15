@@ -37,7 +37,14 @@ Page {
         PullDownMenu {
             id: menu
             MenuItem {
-                text: qsTr("Copy selection")
+                text: qsTr("Set focus")
+                onClicked: {
+                    textArea.focus = true
+                }
+                visible: !textArea.focus
+            }
+            MenuItem {
+                text: qsTr("Copy selected text")
                 onClicked: {
                     textArea.copy()
                 }
@@ -64,7 +71,6 @@ Page {
                 width: parent.width
 
                 anchors {
-                    top: header.bottom
                     left: parent.left
                 }
 

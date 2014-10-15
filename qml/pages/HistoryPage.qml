@@ -26,9 +26,26 @@ import QtQuick 2.1
 import Sailfish.Silica 1.0
 
 import "../js/History.js" as History
+import "../js/Utils.js" as Utils
 
 Page {
     id: historyPage
+
+    function getValueText(value) {
+        if (Utils.isLink(value)) {
+            return value
+        }
+        else {
+            return Utils.removeLineBreak(value)
+        }
+    }
+
+    Component.onCompleted: {
+        var values = History.getAllHistoryValues()
+        for (var i = 0; i < values.length; i++) {
+            historyModel.append(values[i])
+        }
+    }
 
     SilicaListView {
         id: historyList
@@ -36,17 +53,11 @@ Page {
         property Item contextMenu
 
         anchors.fill: parent
+
         width: parent.width
         spacing: 0
 
-        PullDownMenu {
-            MenuItem {
-                text: qsTr("Remove all")
-                onClicked: {
-                    removeAll();
-                }
-            }
-        }
+        header: commonHeader
 
         model: ListModel {
             id: historyModel
@@ -65,7 +76,7 @@ Page {
             }
 
             onClicked: {
-                var historyItem = historyList.get(index)
+                var historyItem = historyModel.get(index)
                 if (Utils.isLink(historyItem.value)) {
                     openInDefaultApp(historyItem.value)
                 }
@@ -75,12 +86,15 @@ Page {
             }
 
             onPressAndHold: {
-                if (!bookmarkList.contextMenu) {
-                    bookmarkList.contextMenu =
-                            contextMenuComponent.createObject(bookmarkList)
+                if (!historyList.contextMenu) {
+                    historyList.contextMenu = contextMenuComponent.createObject(historyList)
                 }
-                bookmarkList.contextMenu.index = index
-                bookmarkList.contextMenu.show(wrapper);
+                historyList.contextMenu.index = index
+                historyList.contextMenu.show(wrapper)
+            }
+
+            ListView.onRemove: RemoveAnimation {
+                target: wrapper
             }
 
             Column {
@@ -91,7 +105,7 @@ Page {
                     opacity: 0
                 }
                 Label {
-                    id: lbTitle
+                    id: lbValue
                     anchors {
                         left: parent.left
                         margins: Theme.paddingLarge
@@ -99,10 +113,9 @@ Page {
                     color: wrapper.highlighted ? Theme.highlightColor : Theme.primaryColor
                     font {
                         pixelSize: Theme.fontSizeSmall
-                        bold: model.toread === 'yes'
                     }
-                    wrapMode: Text.Wrap
-                    text: model.title
+                    truncationMode: TruncationMode.Fade
+                    text: getValueText(model.value)
                     width: wrapper.ListView.view.width - (2 * Theme.paddingLarge)
                 }
                 Label {
@@ -113,18 +126,7 @@ Page {
                     }
                     color: Theme.secondaryColor
                     font.pixelSize: Theme.fontSizeExtraSmall
-                    text: Utils.formatTimestamp(model.time)
-                    Image {
-                        anchors {
-                            verticalCenter: lbCreated.verticalCenter
-                            left: lbCreated.right
-                            leftMargin: Theme.paddingMedium
-                        }
-                        height: Theme.iconSizeSmall
-                        fillMode: Image.PreserveAspectFit
-                        source: "image://theme/icon-m-device-lock"
-                        visible: model.shared === 'no'
-                    }
+                    text: Utils.formatTimestamp(model.timestamp)
                 }
                 Rectangle {
                     height: Theme.paddingLarge / 2
@@ -134,62 +136,84 @@ Page {
             }
         }
 
+        PullDownMenu {
+            MenuItem {
+                text: qsTr("Delete all")
+                onClicked: {
+                    remorsePopup.execute(qsTr("Deleting all"),
+                        function() {
+                            History.removeAllHistoryValues()
+                            historyModel.clear()
+                        },
+                        5000)
+                }
+                enabled: historyModel.count > 0
+            }
+        }
+
         Component {
             id: contextMenuComponent
             ContextMenu {
                 property variant index
 
                 MenuItem {
-                    text: qsTr("Open in default browser")
-                    onClicked: {
-                        openInDefaultBrowser(bookmarkModel.get(index).href);
-                    }
-                }
-                MenuItem {
                     text: qsTr("Delete")
                     onClicked: {
-                        remorse.execute(bookmarkList.contextMenu.parent,
-                                        "Deleting",
-                                        getDeleteFunction(bookmarkModel, index),
-                                        3000)
+                        remorse.execute(historyList.contextMenu.parent,
+                                        qsTr("Deleting"),
+                                        getDeleteFunction(historyModel, index),
+                                        2000)
                     }
-                    visible: root.state === "PINBOARD" || root.state === "PHONE"
                 }
                 MenuItem {
-                    text: qsTr("Copy URL to clipboard")
+                    text: qsTr("Copy to clipboard")
                     onClicked: {
-                        Clipboard.text = bookmarkModel.get(index).href
+                        Clipboard.text = historyModel.get(index).value
                     }
                 }
 
                 function getDeleteFunction(model, index) {
                     // Removing from list destroys the ListElement so we need a copy
-                    var itemToDelete = Bookmark.copy(model.get(index));
+                    var valueToDelete = History.copyValue(model.get(index));
                     var f = function() {
-                        model.remove(index);
-                        getServiceManager().deleteBookmark(itemToDelete,
-                            function() {
-                                window.bookmarksUpdated();
-                            },
-                            function(error) {
-                                bookmarkModel.insert(index, itemToDelete)
-                                infoPanel.showError(error);
-                            }
-                        )
+                        model.remove(index)
+                        History.removeHistoryValue(valueToDelete)
                     }
-                    return f;
+                    return f
                 }
             }
         }
 
-        RemorseItem { id: remorse }
+        RemorseItem {
+            id: remorse
+        }
 
-        VerticalScrollDecorator {}
+        RemorsePopup {
+            id: remorsePopup
+        }
+
+        VerticalScrollDecorator {
+            parent: view
+            flickable: view
+        }
 
         ViewPlaceholder {
             id: placeHolder
-            enabled: histroyModel.count === 0
+            enabled: historyModel.count === 0
             text: qsTr("History is empty")
+        }
+    }
+
+    Component {
+        id: commonHeader
+
+        Column {
+            width: historyPage.width
+
+            PageHeader {
+                title: qsTr("History")
+                height: Theme.itemSizeLarge
+            }
         }
     }
 }
