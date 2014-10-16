@@ -39,8 +39,21 @@ Page {
     }
 
     Rectangle {
+        id: settingsContent
+        color: Theme.rgba(Theme.highlightColor, 0.1)
+
         anchors {
-            topMargin: Theme.paddingLarge * 3
+            topMargin: Screen.width * 1/3
+            top: pageTitle.bottom
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+        }
+    }
+
+    Rectangle {
+        anchors {
+            topMargin: Screen.width * 1/3
             top: pageTitle.bottom
         }
         color: Theme.highlightColor
@@ -54,12 +67,12 @@ Page {
 
         itemWidth: width
         itemHeight: height
-        height: window.height - (pageTitle.height + Theme.paddingLarge * 4
+        height: Screen.height - (pageTitle.height + (Screen.width * 1/3 + Theme.paddingLarge)
                                  + viewIndicator.height + tabHeader.childrenRect.height)
         clip:true
 
         anchors {
-            topMargin: Theme.paddingLarge * 4
+            topMargin: (Screen.width * 1/3 + Theme.paddingLarge)
             top: pageTitle.bottom
             left: parent.left
             right: parent.right

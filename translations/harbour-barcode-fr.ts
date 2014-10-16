@@ -56,7 +56,7 @@
     <name>AutoScanPage</name>
     <message>
         <source>Scan in progress for %1 seconds!</source>
-        <translation>Lecture en cours (%1 secondes restantes)</translation>
+        <translation type="obsolete">Lecture en cours (%1 secondes restantes)</translation>
     </message>
     <message>
         <source>No code detected! Try again.</source>
@@ -88,6 +88,10 @@
     </message>
     <message>
         <source>History</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Scan in progress ...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -134,11 +138,11 @@
     </message>
     <message>
         <source>Scan duration</source>
-        <translation type="unfinished">Durée de la lecture</translation>
+        <translation type="obsolete">Durée de la lecture</translation>
     </message>
     <message>
         <source>%1 seconds</source>
-        <translation type="unfinished">%1 secondes</translation>
+        <translation type="obsolete">%1 secondes</translation>
     </message>
     <message>
         <source>deactivated</source>
@@ -158,6 +162,10 @@
     </message>
     <message>
         <source>Max history size (saved values: %1)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>History</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

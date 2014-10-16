@@ -41,8 +41,7 @@ Page {
     property bool flagAutoScan: true
     property bool flagScanByCover: false
 
-    property int seconds
-    property int scanDuration: 20
+    property int scanTimeout: 60
 
     property int viewFinder_x: scanPage.width / 6
     property int viewFinder_y: Theme.paddingLarge * 2
@@ -95,8 +94,6 @@ Page {
     }
 
     function startScan() {
-        seconds = scanDuration
-
         // hide marker image
         viewFinder.children[0].source = ""
         viewFinder.children[0].visible = false
@@ -104,7 +101,7 @@ Page {
         setMarkerColor()
 
         stateScanning()
-        scanner.startScanning(scanDuration * 1000)
+        scanner.startScanning(scanTimeout * 1000)
     }
 
     function abortScan() {
@@ -126,14 +123,12 @@ Page {
 
     function stateInactive() {
         state = "INACTIVE"
-        labelUpdateTimer.running = false
         statusText.text = ""
         actionButton.enabled = false
     }
 
     function stateReady() {
         state = "READY"
-        labelUpdateTimer.running = false
         actionButton.text = qsTr("Scan")
         actionButton.visible = true
         actionButton.enabled = true
@@ -142,8 +137,7 @@ Page {
 
     function stateScanning() {
         state = "SCANNING"
-        labelUpdateTimer.running = true
-        statusText.text = qsTr("Scan in progress for %1 seconds!").arg(seconds)
+        statusText.text = qsTr("Scan in progress ...")
         clickableResult.clear()
         actionButton.text = qsTr("Abort")
     }
@@ -169,7 +163,6 @@ Page {
             console.log("Page is ACTIVE")
 
             // update changeable values
-            scanPage.scanDuration = Settings.get(Settings.keys.SCAN_DURATION)
             zoomSlider.value = Settings.get(Settings.keys.DIGITAL_ZOOM)
 
             createScanner()
@@ -190,16 +183,6 @@ Page {
                 viewFinder.children[0].source = ""
                 viewFinder.children[0].visible = false
             }
-        }
-    }
-
-    Timer {
-        id: labelUpdateTimer
-        interval: 1000;
-        repeat: true
-        onTriggered: {
-            seconds --
-            statusText.text = qsTr("Scan in progress for %1 seconds!").arg(seconds)
         }
     }
 
@@ -226,19 +209,26 @@ Page {
 
             onCameraStarted: {
                 console.log("camera is started")
+
+                if (!Qt.application.active) {
+                    // use case: start app => lock device immediately => signal Qt.application.onActiveChanged is not emitted
+                    console.log("WARN: device immediately locked")
+                    destroyScanner()
+                    return
+                }
+
                 stateReady()
 
                 if (flagScanByCover || flagAutoScan && Settings.getBoolean(Settings.keys.SCAN_ON_START)) {
-                    flagAutoScan = false
-                    flagScanByCover = false
-
                     startScan();
                 }
+
+                flagAutoScan = false
+                flagScanByCover = false
             }
 
             onDecodingFinished: {
                 console.log("decoding finished, code: ", code)
-                labelUpdateTimer.running = false
                 statusText.text = ""
                 if (scanPage.state !== "ABORT") {
                     if (code.length > 0) {

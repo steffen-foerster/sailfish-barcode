@@ -64,17 +64,8 @@ Item {
             }
         }
 
-        Slider {
-            width: parent.width
-            minimumValue: 5.0
-            maximumValue: 60.0
-            value: Settings.get(Settings.keys.SCAN_DURATION)
-            stepSize: 5
-            label: qsTr("Scan duration")
-            valueText: qsTr("%1 seconds").arg(value)
-            onSliderValueChanged: {
-                Settings.set(Settings.keys.SCAN_DURATION, value)
-            }
+        SectionHeader {
+            text: qsTr("History")
         }
 
         Slider {
