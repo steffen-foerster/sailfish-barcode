@@ -92,53 +92,53 @@
     </message>
     <message>
         <source>History</source>
-        <translation type="unfinished"></translation>
+        <translation>Historik</translation>
     </message>
     <message>
         <source>Scan in progress ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Skanning pågår...</translation>
     </message>
 </context>
 <context>
     <name>HistoryPage</name>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Ta bort</translation>
     </message>
     <message>
         <source>Copy to clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopiera till Urklipp</translation>
     </message>
     <message>
         <source>History is empty</source>
-        <translation type="unfinished"></translation>
+        <translation>Historiken är tom</translation>
     </message>
     <message>
         <source>History</source>
-        <translation type="unfinished"></translation>
+        <translation>Historik</translation>
     </message>
     <message>
         <source>Delete all</source>
-        <translation type="unfinished"></translation>
+        <translation>Ta bort alla</translation>
     </message>
     <message>
         <source>Deleting all</source>
-        <translation type="unfinished"></translation>
+        <translation>Tar bort alla</translation>
     </message>
     <message>
         <source>Deleting</source>
-        <translation type="unfinished"></translation>
+        <translation>Tar bort</translation>
     </message>
 </context>
 <context>
     <name>Settings1View</name>
     <message>
         <source>Detection sound</source>
-        <translation type="unfinished">Detektionsljud</translation>
+        <translation>Detektionsljud</translation>
     </message>
     <message>
         <source>Scan on start</source>
-        <translation type="unfinished"></translation>
+        <translation>Skanna vid start</translation>
     </message>
     <message>
         <source>Scan duration</source>
@@ -150,46 +150,46 @@
     </message>
     <message>
         <source>deactivated</source>
-        <translation type="unfinished">inaktiverad</translation>
+        <translation>inaktiverad</translation>
     </message>
     <message>
         <source>%1 items</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 objekt</translation>
     </message>
     <message>
         <source>Confirm resize</source>
-        <translation type="unfinished"></translation>
+        <translation>Bekräfta storleksändring</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Avbryt</translation>
     </message>
     <message>
         <source>Max history size (saved values: %1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Max historik (sparade objekt: %1)</translation>
     </message>
     <message>
         <source>History</source>
-        <translation type="unfinished"></translation>
+        <translation>Historik</translation>
     </message>
 </context>
 <context>
     <name>Settings2View</name>
     <message>
         <source>Select marker color</source>
-        <translation type="unfinished">Välj markeringsfärg</translation>
+        <translation>Välj markeringsfärg</translation>
     </message>
     <message>
         <source>Mark detected code</source>
-        <translation type="unfinished">Markera upptäckt kod</translation>
+        <translation>Markera upptäckt kod</translation>
     </message>
     <message>
         <source>deactivated</source>
-        <translation type="unfinished">inaktiverad</translation>
+        <translation>inaktiverad</translation>
     </message>
     <message>
         <source>%1 seconds</source>
-        <translation type="unfinished">%1 sekunder</translation>
+        <translation>%1 sekunder</translation>
     </message>
 </context>
 <context>
@@ -224,30 +224,30 @@
     </message>
     <message>
         <source>Settings %1/2</source>
-        <translation type="unfinished"></translation>
+        <translation>Inställningar %1/2</translation>
     </message>
     <message>
         <source>Marker</source>
-        <translation type="unfinished"></translation>
+        <translation>Markör</translation>
     </message>
     <message>
         <source>Scan and history</source>
-        <translation type="unfinished"></translation>
+        <translation>Skanning och historik</translation>
     </message>
 </context>
 <context>
     <name>TextPage</name>
     <message>
         <source>Decoded text</source>
-        <translation type="unfinished"></translation>
+        <translation>Avkodad text</translation>
     </message>
     <message>
         <source>Set focus</source>
-        <translation type="unfinished"></translation>
+        <translation>Fokusera</translation>
     </message>
     <message>
         <source>Copy selected text</source>
-        <translation type="unfinished"></translation>
+        <translation>Kopiera markerad text</translation>
     </message>
 </context>
 <context>
