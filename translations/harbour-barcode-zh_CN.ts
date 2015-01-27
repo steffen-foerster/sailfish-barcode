@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0">
+<TS version="2.1">
 <context>
     <name>AboutPage</name>
     <message>
@@ -137,12 +137,12 @@
         <translation>开启时自动开始扫描</translation>
     </message>
     <message>
-        <source>停用</source>
-        <translation></translation>
+        <source>deactivated</source>
+        <translation>停用</translation>
     </message>
     <message>
-        <source>%1 个项目</source>
-        <translation></translation>
+        <source>%1 items</source>
+        <translation>%1 个项目</translation>
     </message>
     <message>
         <source>Confirm resize</source>

@@ -55,6 +55,7 @@ OTHER_FILES += \
     qml/pages/HistoryPage.qml \
     qml/js/Utils.js
 
+
 # to disable building translations every time, comment out the
 # following CONFIG line
 CONFIG += sailfishapp_i18n
@@ -62,7 +63,9 @@ TRANSLATIONS += \
     translations/harbour-barcode-it.ts \
     translations/harbour-barcode-sv.ts \
     translations/harbour-barcode-fr.ts \
-    translations/harbour-barcode-de.ts
+    translations/harbour-barcode-de.ts \
+    translations/harbour-barcode-da.ts \
+    translations/harbour-barcode-zh_CN.ts
 
 # include library qzxing
 include(src/scanner/qzxing/QZXing.pri)

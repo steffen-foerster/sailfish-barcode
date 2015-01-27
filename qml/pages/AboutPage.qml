@@ -115,7 +115,7 @@ This restriction helps to avoid an interference of the Camera app.")
                     color: clickableUrl.highlighted ? Theme.highlightColor : Theme.primaryColor
                 }
                 onClicked: {
-                    openInDefaultBrowser("https://github.com/steffen-foerster/sailfish-barcode");
+                    openInDefaultApp("https://github.com/steffen-foerster/sailfish-barcode");
                 }
             }
 
