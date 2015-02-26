@@ -65,7 +65,8 @@ TRANSLATIONS += \
     translations/harbour-barcode-fr.ts \
     translations/harbour-barcode-de.ts \
     translations/harbour-barcode-da.ts \
-    translations/harbour-barcode-zh_CN.ts
+    translations/harbour-barcode-zh_CN.ts \
+    translations/harbour-barcode-zh_TW.ts
 
 # include library qzxing
 include(src/scanner/qzxing/QZXing.pri)
