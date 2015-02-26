@@ -88,42 +88,42 @@
     </message>
     <message>
         <source>History</source>
-        <translation type="unfinished"></translation>
+        <translation>Historique</translation>
     </message>
     <message>
         <source>Scan in progress ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Scan en cours ...</translation>
     </message>
 </context>
 <context>
     <name>HistoryPage</name>
     <message>
         <source>Delete</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer</translation>
     </message>
     <message>
         <source>Copy to clipboard</source>
-        <translation type="unfinished"></translation>
+        <translation>Copier dans le presse papier</translation>
     </message>
     <message>
         <source>History is empty</source>
-        <translation type="unfinished"></translation>
+        <translation>Historique vide</translation>
     </message>
     <message>
         <source>History</source>
-        <translation type="unfinished"></translation>
+        <translation>Historique</translation>
     </message>
     <message>
         <source>Delete all</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprimer tout</translation>
     </message>
     <message>
         <source>Deleting all</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprime tout</translation>
     </message>
     <message>
         <source>Deleting</source>
-        <translation type="unfinished"></translation>
+        <translation>Supprime</translation>
     </message>
 </context>
 <context>
@@ -134,7 +134,7 @@
     </message>
     <message>
         <source>Scan on start</source>
-        <translation type="unfinished"></translation>
+        <translation>Scanner au démarrage</translation>
     </message>
     <message>
         <source>Scan duration</source>
@@ -146,46 +146,46 @@
     </message>
     <message>
         <source>deactivated</source>
-        <translation type="unfinished">désactivée</translation>
+        <translation>désactivée</translation>
     </message>
     <message>
         <source>%1 items</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 éléments</translation>
     </message>
     <message>
         <source>Confirm resize</source>
-        <translation type="unfinished"></translation>
+        <translation>Confirmer le redimensionnement</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Annuler</translation>
     </message>
     <message>
         <source>Max history size (saved values: %1)</source>
-        <translation type="unfinished"></translation>
+        <translation>Historique maximum (%1 éléments sauvegardés)</translation>
     </message>
     <message>
         <source>History</source>
-        <translation type="unfinished"></translation>
+        <translation>Historique</translation>
     </message>
 </context>
 <context>
     <name>Settings2View</name>
     <message>
         <source>Select marker color</source>
-        <translation type="unfinished">Couleur des marqueurs</translation>
+        <translation>Couleur des marqueurs</translation>
     </message>
     <message>
         <source>Mark detected code</source>
-        <translation type="unfinished">Indication du code détecté</translation>
+        <translation>Indication du code détecté</translation>
     </message>
     <message>
         <source>deactivated</source>
-        <translation type="unfinished">désactivée</translation>
+        <translation>désactivée</translation>
     </message>
     <message>
         <source>%1 seconds</source>
-        <translation type="unfinished">%1 secondes</translation>
+        <translation>%1 secondes</translation>
     </message>
 </context>
 <context>
@@ -220,30 +220,30 @@
     </message>
     <message>
         <source>Settings %1/2</source>
-        <translation type="unfinished"></translation>
+        <translation>Paramètres %1/2</translation>
     </message>
     <message>
         <source>Marker</source>
-        <translation type="unfinished"></translation>
+        <translation>Marqueur</translation>
     </message>
     <message>
         <source>Scan and history</source>
-        <translation type="unfinished"></translation>
+        <translation>Lecture et historique</translation>
     </message>
 </context>
 <context>
     <name>TextPage</name>
     <message>
         <source>Decoded text</source>
-        <translation type="unfinished"></translation>
+        <translation>Texte lu</translation>
     </message>
     <message>
         <source>Set focus</source>
-        <translation type="unfinished"></translation>
+        <translation>Mettre au point</translation>
     </message>
     <message>
         <source>Copy selected text</source>
-        <translation type="unfinished"></translation>
+        <translation>Copier le texte</translation>
     </message>
 </context>
 <context>
