@@ -25,7 +25,7 @@ THE SOFTWARE.
 .pragma library
 
 function isLink(text) {
-    var urls = text.match(/^(http[s]*:\/\/.{3,500}|www\..{3,500}|sms:\+\d{5,})$/);
+    var urls = text.match(/^(http[s]*:\/\/.{3,500}|www\..{3,500}|sms:.*)$/);
     var vcard = text.match(/^(.+VCARD.+)$/);
     // is a known url scheme and not a vcard
     return (urls && urls.length > 0 && !(vcard && vcard.length > 0));
