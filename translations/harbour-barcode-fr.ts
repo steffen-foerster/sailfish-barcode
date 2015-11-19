@@ -55,10 +55,6 @@
 <context>
     <name>AutoScanPage</name>
     <message>
-        <source>Scan in progress for %1 seconds!</source>
-        <translation type="obsolete">Lecture en cours (%1 secondes restantes)</translation>
-    </message>
-    <message>
         <source>No code detected! Try again.</source>
         <translation>Aucun code barres détécté ! Veuillez réessayer.</translation>
     </message>
@@ -137,14 +133,6 @@
         <translation>Scanner au démarrage</translation>
     </message>
     <message>
-        <source>Scan duration</source>
-        <translation type="obsolete">Durée de la lecture</translation>
-    </message>
-    <message>
-        <source>%1 seconds</source>
-        <translation type="obsolete">%1 secondes</translation>
-    </message>
-    <message>
         <source>deactivated</source>
         <translation>désactivée</translation>
     </message>
@@ -190,34 +178,6 @@
 </context>
 <context>
     <name>SettingsPage</name>
-    <message>
-        <source>Settings</source>
-        <translation type="obsolete">Paramètres</translation>
-    </message>
-    <message>
-        <source>Scan duration</source>
-        <translation type="obsolete">Durée de la lecture</translation>
-    </message>
-    <message>
-        <source>%1 seconds</source>
-        <translation type="obsolete">%1 secondes</translation>
-    </message>
-    <message>
-        <source>Detection sound</source>
-        <translation type="obsolete">Bip !</translation>
-    </message>
-    <message>
-        <source>Select marker color</source>
-        <translation type="obsolete">Couleur des marqueurs</translation>
-    </message>
-    <message>
-        <source>Mark detected code</source>
-        <translation type="obsolete">Indication du code détecté</translation>
-    </message>
-    <message>
-        <source>deactivated</source>
-        <translation type="obsolete">désactivée</translation>
-    </message>
     <message>
         <source>Settings %1/2</source>
         <translation>Paramètres %1/2</translation>

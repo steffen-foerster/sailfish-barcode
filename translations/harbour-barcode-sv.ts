@@ -59,10 +59,6 @@
 <context>
     <name>AutoScanPage</name>
     <message>
-        <source>Scan in progress for %1 seconds!</source>
-        <translation type="obsolete">Skanning har pågått i %1 sekunder!</translation>
-    </message>
-    <message>
         <source>No code detected! Try again.</source>
         <translation>Ingen kod hittades! Försök igen.</translation>
     </message>
@@ -141,14 +137,6 @@
         <translation>Skanna vid start</translation>
     </message>
     <message>
-        <source>Scan duration</source>
-        <translation type="obsolete">Skanningsförlopp</translation>
-    </message>
-    <message>
-        <source>%1 seconds</source>
-        <translation type="obsolete">%1 sekunder</translation>
-    </message>
-    <message>
         <source>deactivated</source>
         <translation>inaktiverad</translation>
     </message>
@@ -194,34 +182,6 @@
 </context>
 <context>
     <name>SettingsPage</name>
-    <message>
-        <source>Settings</source>
-        <translation type="obsolete">Inställningar</translation>
-    </message>
-    <message>
-        <source>Detection sound</source>
-        <translation type="obsolete">Detektionsljud</translation>
-    </message>
-    <message>
-        <source>Scan duration</source>
-        <translation type="obsolete">Skanningsförlopp</translation>
-    </message>
-    <message>
-        <source>%1 seconds</source>
-        <translation type="obsolete">%1 sekunder</translation>
-    </message>
-    <message>
-        <source>deactivated</source>
-        <translation type="obsolete">inaktiverad</translation>
-    </message>
-    <message>
-        <source>Select marker color</source>
-        <translation type="obsolete">Välj markeringsfärg</translation>
-    </message>
-    <message>
-        <source>Mark detected code</source>
-        <translation type="obsolete">Markera upptäckt kod</translation>
-    </message>
     <message>
         <source>Settings %1/2</source>
         <translation>Inställningar %1/2</translation>
