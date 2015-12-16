@@ -197,17 +197,14 @@ void AutoBarcodeScanner::stopScanning() {
 
 bool AutoBarcodeScanner::isJollaCameraRunning() {
     QProcess process;
-    QString cmd = "/bin/sh";
-    QStringList args;
-    args << "-c" << "ps -A | grep jolla-camera";
+    QString cmd = "pidof";
+    QStringList args("jolla-camera");
     process.start(cmd, args);
 
     bool result = false;
     if (process.waitForFinished()) {
-        QString output = "";
-        output.append(process.readAllStandardOutput());
-        qDebug() << "result of ps command: " << output;
-        result = output.contains("jolla-camera", Qt::CaseInsensitive);
+        result = (process.exitStatus() == QProcess::NormalExit &&
+                  process.exitCode() == 0);
     }
 
     if (result) {
