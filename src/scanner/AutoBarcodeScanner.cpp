@@ -220,7 +220,7 @@ void AutoBarcodeScanner::processDecode() {
     qDebug() << "processDecode() is called from " << QThread::currentThread();
 
     bool scanActive = true;
-    QString code = "";
+    QString code;
     QVariantHash result;
 
     while (scanActive) {
@@ -246,7 +246,7 @@ void AutoBarcodeScanner::processDecode() {
             result = m_decoder->decodeBarcodeFromCache();
             code = result["content"].toString();
 
-            if (code.length() == 0) {
+            if (code.isEmpty()) {
                 // try for 1D bar code the other orientation
                 QTransform transform;
                 transform.rotate(90);
@@ -257,7 +257,7 @@ void AutoBarcodeScanner::processDecode() {
                 code = result["content"].toString();
             }
 
-            if (code.length() > 0) {
+            if (!code.isEmpty()) {
                 m_timeoutTimer->stop();
                 scanActive = false;
                 qDebug() << "bar code found";
