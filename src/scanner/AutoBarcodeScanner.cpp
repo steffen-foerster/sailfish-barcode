@@ -40,6 +40,7 @@ AutoBarcodeScanner::AutoBarcodeScanner(QObject * parent)
     , m_flagComponentComplete(false)
     , m_flagScanRunning(false)
     , m_flagScanAbort(false)
+    , m_timeoutTimer(new QTimer(this))
     , m_markerColor(QColor(0, 255, 0)) // default green
 {
     qDebug() << "start init AutoBarcodeScanner";
@@ -53,7 +54,8 @@ AutoBarcodeScanner::AutoBarcodeScanner(QObject * parent)
     m_camera->focus()->setFocusPointMode(QCameraFocus::FocusPointAuto);
 
     createConnections();
-    createTimer();
+    m_timeoutTimer->setSingleShot(true);
+    connect(m_timeoutTimer, SIGNAL(timeout()), this, SLOT(slotScanningTimeout()));
 }
 
 AutoBarcodeScanner::~AutoBarcodeScanner() {
@@ -83,12 +85,6 @@ void AutoBarcodeScanner::createConnections() {
             this, SLOT(slotStatusChanged(QCamera::Status)));
     connect(m_camera, SIGNAL(stateChanged(QCamera::State)),
             this, SLOT(slotStateChanged(QCamera::State)));
-}
-
-void AutoBarcodeScanner::createTimer() {
-    m_timeoutTimer = new QTimer(this);
-    m_timeoutTimer->setSingleShot(true);
-    connect(m_timeoutTimer, SIGNAL(timeout()), this, SLOT(slotScanningTimeout()));
 }
 
 void AutoBarcodeScanner::classBegin() {

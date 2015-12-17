@@ -104,7 +104,6 @@ protected:
 
 private:
     void createConnections();
-    void createTimer();
     bool isJollaCameraRunning();
     void markLastCaptureImage(QList<QVariant> &points);
 
