@@ -109,8 +109,8 @@ private:
     void markLastCaptureImage(QList<QVariant> &points);
 
     BarcodeDecoder* m_decoder;
-    QCameraImageCapture* m_imageCapture;
     QCamera* m_camera;
+    QCameraImageCapture* m_imageCapture;
     bool m_flagComponentComplete;
     bool m_flagScanRunning;
     bool m_flagScanAbort;

@@ -32,13 +32,17 @@ THE SOFTWARE.
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
 
-AutoBarcodeScanner::AutoBarcodeScanner(QObject * parent) : QObject(parent)
+AutoBarcodeScanner::AutoBarcodeScanner(QObject * parent)
+    : QObject(parent)
+    , m_decoder(new BarcodeDecoder(this))
+    , m_camera(new QCamera(this))
+    , m_imageCapture(new QCameraImageCapture(m_camera, this))
+    , m_flagComponentComplete(false)
+    , m_flagScanRunning(false)
+    , m_flagScanAbort(false)
+    , m_markerColor(QColor(0, 255, 0)) // default green
 {
     qDebug() << "start init AutoBarcodeScanner";
-
-    m_camera = new QCamera(this);
-    m_decoder = new BarcodeDecoder(this);
-    m_imageCapture = new QCameraImageCapture(m_camera, this);
 
     m_camera->exposure()->setExposureCompensation(2.0);
     m_camera->exposure()->setExposureMode(QCameraExposure::ExposureAuto);
@@ -47,12 +51,6 @@ AutoBarcodeScanner::AutoBarcodeScanner(QObject * parent) : QObject(parent)
     m_camera->focus()->zoomTo(1.0, 3.0);
     m_camera->focus()->setFocusMode(QCameraFocus::ContinuousFocus);
     m_camera->focus()->setFocusPointMode(QCameraFocus::FocusPointAuto);
-
-    m_flagComponentComplete = false;
-    m_flagScanRunning = false;
-    m_flagScanAbort = false;
-
-    m_markerColor = QColor(0, 255, 0); // default green
 
     createConnections();
     createTimer();
