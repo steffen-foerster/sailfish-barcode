@@ -32,13 +32,18 @@ THE SOFTWARE.
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
 
-AutoBarcodeScanner::AutoBarcodeScanner(QObject * parent) : QObject(parent)
+AutoBarcodeScanner::AutoBarcodeScanner(QObject * parent)
+    : QObject(parent)
+    , m_decoder(new BarcodeDecoder(this))
+    , m_camera(new QCamera(this))
+    , m_imageCapture(new QCameraImageCapture(m_camera, this))
+    , m_flagComponentComplete(false)
+    , m_flagScanRunning(false)
+    , m_flagScanAbort(false)
+    , m_timeoutTimer(new QTimer(this))
+    , m_markerColor(QColor(0, 255, 0)) // default green
 {
     qDebug() << "start init AutoBarcodeScanner";
-
-    m_camera = new QCamera(this);
-    m_decoder = new BarcodeDecoder(this);
-    m_imageCapture = new QCameraImageCapture(m_camera, this);
 
     m_camera->exposure()->setExposureCompensation(2.0);
     m_camera->exposure()->setExposureMode(QCameraExposure::ExposureAuto);
@@ -48,14 +53,9 @@ AutoBarcodeScanner::AutoBarcodeScanner(QObject * parent) : QObject(parent)
     m_camera->focus()->setFocusMode(QCameraFocus::ContinuousFocus);
     m_camera->focus()->setFocusPointMode(QCameraFocus::FocusPointAuto);
 
-    m_flagComponentComplete = false;
-    m_flagScanRunning = false;
-    m_flagScanAbort = false;
-
-    m_markerColor = QColor(0, 255, 0); // default green
-
     createConnections();
-    createTimer();
+    m_timeoutTimer->setSingleShot(true);
+    connect(m_timeoutTimer, SIGNAL(timeout()), this, SLOT(slotScanningTimeout()));
 }
 
 AutoBarcodeScanner::~AutoBarcodeScanner() {
@@ -85,12 +85,6 @@ void AutoBarcodeScanner::createConnections() {
             this, SLOT(slotStatusChanged(QCamera::Status)));
     connect(m_camera, SIGNAL(stateChanged(QCamera::State)),
             this, SLOT(slotStateChanged(QCamera::State)));
-}
-
-void AutoBarcodeScanner::createTimer() {
-    m_timeoutTimer = new QTimer(this);
-    m_timeoutTimer->setSingleShot(true);
-    connect(m_timeoutTimer, SIGNAL(timeout()), this, SLOT(slotScanningTimeout()));
 }
 
 void AutoBarcodeScanner::classBegin() {
@@ -197,17 +191,14 @@ void AutoBarcodeScanner::stopScanning() {
 
 bool AutoBarcodeScanner::isJollaCameraRunning() {
     QProcess process;
-    QString cmd = "/bin/sh";
-    QStringList args;
-    args << "-c" << "ps -A | grep jolla-camera";
+    QString cmd = "pidof";
+    QStringList args("jolla-camera");
     process.start(cmd, args);
 
     bool result = false;
     if (process.waitForFinished()) {
-        QString output = "";
-        output.append(process.readAllStandardOutput());
-        qDebug() << "result of ps command: " << output;
-        result = output.contains("jolla-camera", Qt::CaseInsensitive);
+        result = (process.exitStatus() == QProcess::NormalExit &&
+                  process.exitCode() == 0);
     }
 
     if (result) {
@@ -223,7 +214,7 @@ void AutoBarcodeScanner::processDecode() {
     qDebug() << "processDecode() is called from " << QThread::currentThread();
 
     bool scanActive = true;
-    QString code = "";
+    QString code;
     QVariantHash result;
 
     while (scanActive) {
@@ -249,7 +240,7 @@ void AutoBarcodeScanner::processDecode() {
             result = m_decoder->decodeBarcodeFromCache();
             code = result["content"].toString();
 
-            if (code.length() == 0) {
+            if (code.isEmpty()) {
                 // try for 1D bar code the other orientation
                 QTransform transform;
                 transform.rotate(90);
@@ -260,7 +251,7 @@ void AutoBarcodeScanner::processDecode() {
                 code = result["content"].toString();
             }
 
-            if (code.length() > 0) {
+            if (!code.isEmpty()) {
                 m_timeoutTimer->stop();
                 scanActive = false;
                 qDebug() << "bar code found";
