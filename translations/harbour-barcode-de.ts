@@ -137,10 +137,6 @@
         <translation>Scannen bei Programmstart</translation>
     </message>
     <message>
-        <source>%1 seconds</source>
-        <translation type="vanished">%1 Sekunden</translation>
-    </message>
-    <message>
         <source>deactivated</source>
         <translation>deaktiviert</translation>
     </message>

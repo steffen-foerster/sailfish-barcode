@@ -43,10 +43,10 @@ Page {
 
     property int scanTimeout: 60
 
-    property int viewFinder_x: scanPage.width / 6
-    property int viewFinder_y: Theme.paddingLarge * 2
-    property int viewFinder_width: scanPage.width * (2/3)
-    property int viewFinder_height: viewFinder_width * (4/3)
+    property int viewFinder_x: scanPage.width * 0.22
+    property int viewFinder_y: Theme.paddingLarge
+    property int viewFinder_width: scanPage.width * 0.56
+    property int viewFinder_height: scanPage.width
 
     function createScanner() {
         if (scanner) {
@@ -268,7 +268,7 @@ Page {
         VideoOutput {
             anchors.fill: parent
             //focus: visible // to receive focus when visible
-            fillMode: VideoOutput.PreserveAspectFit
+            fillMode: VideoOutput.PreserveAspectCrop
             orientation: -90
 
             Image {
@@ -326,15 +326,15 @@ Page {
 
             anchors {
                 top: parent.top
-                topMargin: Theme.paddingLarge * 2
+                topMargin: Theme.paddingLarge
             }
 
             Item {
                 id: parentViewFinder
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                width: parent.width * 2/3
-                height: ((parent.width * 2/3) / 3) * 4
+                width: parent.width * 0.56
+                height: parent.width
             }
 
             Row {
@@ -364,9 +364,9 @@ Page {
                     id: zoomSlider
                     width: parent.width
                     minimumValue: 1.0
-                    maximumValue: 7.0
+                    maximumValue: 70.0
                     value: 1
-                    stepSize: 1
+                    stepSize: 10
                     onValueChanged: {
                         if (scanner) {
                             scanner.zoomTo(value)

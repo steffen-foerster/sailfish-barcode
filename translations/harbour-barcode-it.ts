@@ -60,10 +60,6 @@
 <context>
     <name>AutoScanPage</name>
     <message>
-        <source>Scan in progress for %1 seconds!</source>
-        <translation type="obsolete">Scansione in corso per %1 secondi!</translation>
-    </message>
-    <message>
         <source>No code detected! Try again.</source>
         <translation>Nessun codice rilevato! Prova ancora.</translation>
     </message>
@@ -142,14 +138,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Scan duration</source>
-        <translation type="obsolete">Durata scansione</translation>
-    </message>
-    <message>
-        <source>%1 seconds</source>
-        <translation type="obsolete">%1 secondi</translation>
-    </message>
-    <message>
         <source>deactivated</source>
         <translation type="unfinished"></translation>
     </message>
@@ -195,22 +183,6 @@
 </context>
 <context>
     <name>SettingsPage</name>
-    <message>
-        <source>Settings</source>
-        <translation type="obsolete">Impostazioni</translation>
-    </message>
-    <message>
-        <source>Detection sound</source>
-        <translation type="obsolete">Suono al rilevamento</translation>
-    </message>
-    <message>
-        <source>Scan duration</source>
-        <translation type="obsolete">Durata scansione</translation>
-    </message>
-    <message>
-        <source>%1 seconds</source>
-        <translation type="obsolete">%1 secondi</translation>
-    </message>
     <message>
         <source>Settings %1/2</source>
         <translation type="unfinished"></translation>

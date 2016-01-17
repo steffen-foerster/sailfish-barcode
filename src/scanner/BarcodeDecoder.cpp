@@ -29,7 +29,10 @@ THE SOFTWARE.
 #include "qzxing/qzxing.h"
 #include "BarcodeDecoder.h"
 
-BarcodeDecoder::BarcodeDecoder(QObject *parent) : QObject(parent)
+BarcodeDecoder::BarcodeDecoder(QObject *parent)
+    : QObject(parent)
+    // ZXing
+    , decoder(new QZXing())
 {
     // prepare cache directory
     QString cacheFolderLocation = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
@@ -39,15 +42,10 @@ BarcodeDecoder::BarcodeDecoder(QObject *parent) : QObject(parent)
     if (!cacheDir.exists()) {
         cacheDir.mkpath(".");
     }
-
-    // ZXing
-    decoder = new QZXing();
-
 }
 
 BarcodeDecoder::~BarcodeDecoder() {
     delete decoder;
-    decoder = 0;
 }
 
 void BarcodeDecoder::setDecoderFormat(const int &format) {
