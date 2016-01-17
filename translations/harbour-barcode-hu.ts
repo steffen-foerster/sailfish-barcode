@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="hu_HU">
+<TS version="2.0" language="hu_HU">
 <context>
     <name>AboutPage</name>
     <message>
@@ -25,7 +25,7 @@
     </message>
     <message>
         <source>This app prevents a scan if the Jolla Camera app is running. This restriction helps to avoid an interference of the Camera app.</source>
-        <translation>Ez az alkalmazás nem tud beolvasni ha a kamera alkalmazás fut. Ez a megszorítás segít elkerülni a kamera alkalmazásal összeakadást.</translation>
+        <translation>Ez az alkalmazás nem tud kódot beolvasni amíg kamera alkalmazás fut. Ez a megszorítás segít elkerülni a kamera alkalmazással összeakadást.</translation>
     </message>
     <message>
         <source>Version</source>
@@ -115,11 +115,11 @@
     </message>
     <message>
         <source>Delete all</source>
-        <translation>Mind törlése</translation>
+        <translation>Összes törlése</translation>
     </message>
     <message>
         <source>Deleting all</source>
-        <translation>Mind törlése</translation>
+        <translation>Összes törlése</translation>
     </message>
     <message>
         <source>Deleting</source>
@@ -138,7 +138,7 @@
     </message>
     <message>
         <source>deactivated</source>
-        <translation>deaktiválva</translation>
+        <translation>kikapcsolva</translation>
     </message>
     <message>
         <source>%1 items</source>
@@ -165,7 +165,7 @@
     <name>Settings2View</name>
     <message>
         <source>Select marker color</source>
-        <translation>Jelőlő színe</translation>
+        <translation>Jelölő színe</translation>
     </message>
     <message>
         <source>Mark detected code</source>
@@ -173,7 +173,7 @@
     </message>
     <message>
         <source>deactivated</source>
-        <translation>deaktiválva</translation>
+        <translation>kikapcsolva</translation>
     </message>
     <message>
         <source>%1 seconds</source>
@@ -214,7 +214,7 @@
     <name>harbour-barcode</name>
     <message>
         <source>Opening in default app ...</source>
-        <translation>Megynitás az alapértelmezett alkalmazásban ...</translation>
+        <translation>Megnyitás az alapértelmezett alkalmazással ...</translation>
     </message>
 </context>
 </TS>
