@@ -366,7 +366,7 @@ Page {
                     minimumValue: 1.0
                     maximumValue: 70.0
                     value: 1
-                    stepSize: 10
+                    stepSize: 5
                     onValueChanged: {
                         if (scanner) {
                             scanner.zoomTo(value)

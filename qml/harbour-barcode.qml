@@ -32,7 +32,7 @@ ApplicationWindow
     id: window
 
     function getVersion() {
-        return "0.7.7"
+        return "0.7.8"
     }
 
     function openInDefaultApp(url) {
