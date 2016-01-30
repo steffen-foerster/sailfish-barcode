@@ -67,6 +67,7 @@ TRANSLATIONS += \
     translations/harbour-barcode-hu.ts \
     translations/harbour-barcode-da.ts \
     translations/harbour-barcode-es.ts \
+    translations/harbour-barcode-ru.ts \
     translations/harbour-barcode-zh_CN.ts \
     translations/harbour-barcode-zh_TW.ts \
     translations/harbour-barcode-cs_CZ.ts
