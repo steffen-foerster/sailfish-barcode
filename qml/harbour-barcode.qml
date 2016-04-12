@@ -52,11 +52,16 @@ ApplicationWindow
         console.log("ApplicationWindow onCompleted")
         Settings.initialize()
         pageStack.replace(mainPage)
+        pageStack.pushAttached(historyPage)
     }
 
     Component {
         id: mainPage
         AutoScanPage {}
+    }
+    Component {
+        id: historyPage
+        HistoryPage {}
     }
 
     // infoPanel borrowed from https://github.com/veskuh/Tweetian/blob/sailfish-port/qml/tweetian-harmattan/main.qml - Thanks!
