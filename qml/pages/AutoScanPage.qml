@@ -431,7 +431,7 @@ Page {
                     clickableResult.enabled = true
                     clickableResult.isLink = false
                     clickableResult.text = text
-                    resultText.text = Utils.shortenText(text, 15)
+                    resultText.text = text
                     resultText.width =
                             rowResult.width - clipboardImg.width - arrowRightImg.width - 2 * Theme.paddingLarge
                 }
