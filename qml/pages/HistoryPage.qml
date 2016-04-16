@@ -40,10 +40,16 @@ Page {
         }
     }
 
-    Component.onCompleted: {
-        var values = History.getAllHistoryValues()
-        for (var i = 0; i < values.length; i++) {
-            historyModel.append(values[i])
+    onStatusChanged: {
+        if (status === PageStatus.Activating) {
+            var values = History.getAllHistoryValues()
+
+            if (historyModel.count !== values.length) {
+                historyModel.clear();
+                for (var i = 0; i < values.length; i++) {
+                    historyModel.append(values[i])
+                }
+            }
         }
     }
 

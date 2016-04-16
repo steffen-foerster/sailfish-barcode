@@ -311,12 +311,6 @@ Page {
                     pageStack.push("SettingsPage.qml");
                 }
             }
-            MenuItem {
-                text: qsTr("History")
-                onClicked: {
-                    pageStack.push("HistoryPage.qml");
-                }
-            }
         }
 
         Column {
