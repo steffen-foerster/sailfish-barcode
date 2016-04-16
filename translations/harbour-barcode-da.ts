@@ -87,10 +87,6 @@
         <translation>Indstillinger</translation>
     </message>
     <message>
-        <source>History</source>
-        <translation>Historik</translation>
-    </message>
-    <message>
         <source>Scan in progress ...</source>
         <translation>Scanning i gang...</translation>
     </message>

@@ -87,10 +87,6 @@
         <translation>Ajustes</translation>
     </message>
     <message>
-        <source>History</source>
-        <translation>Historial</translation>
-    </message>
-    <message>
         <source>Scan in progress ...</source>
         <translation>Escaneo en curso ...</translation>
     </message>

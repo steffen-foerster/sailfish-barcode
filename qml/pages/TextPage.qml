@@ -76,7 +76,7 @@ Page {
 
                 selectionMode: TextEdit.SelectWords
                 focus: true
-                readOnly: true
+                readOnly: false
                 wrapMode: TextEdit.Wrap
                 labelVisible: false
             }

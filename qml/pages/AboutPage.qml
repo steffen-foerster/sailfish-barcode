@@ -91,7 +91,7 @@ This restriction helps to avoid an interference of the Camera app.")
                     margins: Theme.paddingLarge
                 }
                 label: qsTr("Contributors")
-                text: "Diego Russo, Åke Engelbrektson, Dominik Chrástecký, Miklós Márton"
+                text: "Diego Russo, Åke Engelbrektson, Dominik Chrástecký, Miklós Márton, Hauke Schade"
                 separator: true
             }
 
@@ -173,13 +173,29 @@ This restriction helps to avoid an interference of the Camera app.")
 
             SilicaGridView {
                 id: grid
+
+                function adjustGridDimensions() {
+                    var columns = [5, 4, 3]
+                    var adjusted = false
+                    for (var i = 0; i < columns.length; i++) {
+                        if (!adjusted && Screen.width / columns[i] >= 270) {
+                            grid.cellWidth = Screen.width / columns[i]
+                            grid.height = grid.cellHeight * Math.ceil(imageModel.count / columns[i])
+                            adjusted = true
+                        }
+                    }
+                }
+
                 width: parent.width
-                height: 180 * 4
+                height: 180 * Math.ceil(imageModel.count / 2)
                 cellWidth: Screen.width / 2
                 cellHeight: 180
                 quickScroll: false
                 interactive: false
                 model: imageModel
+
+                Component.onCompleted: adjustGridDimensions()
+
                 delegate: Item {
                     width: grid.cellWidth
                     height: grid.cellHeight

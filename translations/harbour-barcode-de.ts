@@ -87,10 +87,6 @@
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <source>History</source>
-        <translation>Verlauf</translation>
-    </message>
-    <message>
         <source>Scan in progress ...</source>
         <translation>Scannen läuft ...</translation>
     </message>

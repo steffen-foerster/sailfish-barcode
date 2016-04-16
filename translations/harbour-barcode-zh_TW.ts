@@ -87,10 +87,6 @@
         <translation>設定</translation>
     </message>
     <message>
-        <source>History</source>
-        <translation>歷史紀錄</translation>
-    </message>
-    <message>
         <source>Scan in progress ...</source>
         <translation>掃描中...</translation>
     </message>

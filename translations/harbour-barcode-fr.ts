@@ -83,10 +83,6 @@
         <translation>Annuler</translation>
     </message>
     <message>
-        <source>History</source>
-        <translation>Historique</translation>
-    </message>
-    <message>
         <source>Scan in progress ...</source>
         <translation>Scan en cours ...</translation>
     </message>

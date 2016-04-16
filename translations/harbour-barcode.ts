@@ -87,10 +87,6 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>History</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <source>Scan in progress ...</source>
         <translation type="unfinished"></translation>
     </message>

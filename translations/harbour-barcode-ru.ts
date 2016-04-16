@@ -87,10 +87,6 @@
         <translation>Настройки</translation>
     </message>
     <message>
-        <source>History</source>
-        <translation>История</translation>
-    </message>
-    <message>
         <source>Scan in progress ...</source>
         <translation>Сканирование...</translation>
     </message>

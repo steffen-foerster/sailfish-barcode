@@ -87,10 +87,6 @@
         <translation>Beállítások</translation>
     </message>
     <message>
-        <source>History</source>
-        <translation>Előzmények</translation>
-    </message>
-    <message>
         <source>Scan in progress ...</source>
         <translation>Beolvasás folyamatban ...</translation>
     </message>

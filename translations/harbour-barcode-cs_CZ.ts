@@ -86,10 +86,6 @@
         <source>Settings</source>
         <translation>Nastavení</translation>
     </message>
-    <message>
-        <source>History</source>
-        <translation>Historie</translation>
-    </message>
 </context>
 <context>
     <name>HistoryPage</name>

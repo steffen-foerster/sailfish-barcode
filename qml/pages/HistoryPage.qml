@@ -40,11 +40,22 @@ Page {
         }
     }
 
+    function isHistoryChanged(dbValues) {
+        var changed = false;
+        if (historyModel.count !== dbValues.length) {
+            changed = true
+        }
+        else if (historyModel.count > 0 && historyModel.get(0).rowid !== dbValues[0].rowid) {
+            changed = true
+        }
+        return changed
+    }
+
     onStatusChanged: {
         if (status === PageStatus.Activating) {
             var values = History.getAllHistoryValues()
 
-            if (historyModel.count !== values.length) {
+            if (isHistoryChanged(values)) {
                 historyModel.clear();
                 for (var i = 0; i < values.length; i++) {
                     historyModel.append(values[i])
