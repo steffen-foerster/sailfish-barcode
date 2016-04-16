@@ -46,7 +46,7 @@ Page {
     property int viewFinder_x: scanPage.width * 0.22
     property int viewFinder_y: Theme.paddingLarge
     property int viewFinder_width: scanPage.width * 0.56
-    property int viewFinder_height: scanPage.width
+    property int viewFinder_height: scanPage.height * 0.56
 
     function createScanner() {
         if (scanner) {
@@ -327,8 +327,8 @@ Page {
                 id: parentViewFinder
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                width: parent.width * 0.56
-                height: parent.width
+                width: viewFinder_width
+                height: viewFinder_height
             }
 
             Row {
@@ -425,7 +425,7 @@ Page {
                     clickableResult.enabled = true
                     clickableResult.isLink = false
                     clickableResult.text = text
-                    resultText.text = Utils.shortenText(text, 15)
+                    resultText.text = text
                     resultText.width =
                             rowResult.width - clipboardImg.width - arrowRightImg.width - 2 * Theme.paddingLarge
                 }
