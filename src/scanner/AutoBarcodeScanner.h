@@ -50,9 +50,11 @@ public:
     // see qdeclarativecamera_p.h
     Q_PROPERTY(QObject *mediaObject READ mediaObject NOTIFY mediaObjectChanged SCRIPTABLE false DESIGNABLE false)
 
+    Q_PROPERTY(bool flashState READ flashState)
+
     Q_INVOKABLE void startScanning(int timeout);
     Q_INVOKABLE void stopScanning();
-    Q_INVOKABLE bool toggleFlash(bool status);
+    Q_INVOKABLE void toggleFlash();
     Q_INVOKABLE void zoomTo(qreal digitalZoom);
     Q_INVOKABLE void setDecoderFormat(int format);
 
@@ -76,6 +78,8 @@ public:
     // see qdeclarativecamera_p.h
     QObject *mediaObject() { return m_camera; }
 
+    bool flashState() const { return m_flashState; }
+
     enum ErrorCode {
         LockFailed,
         CameraUnavailable,
@@ -89,6 +93,7 @@ signals:
     void decodingFinished(const QString &code);
     void error(ErrorCode errorCode);
     void mediaObjectChanged();
+    void flashStateChanged(bool currentState);
 
 public slots:
     void slotScanningTimeout();
@@ -106,6 +111,7 @@ private:
     void createConnections();
     bool isJollaCameraRunning();
     void markLastCaptureImage(QList<QVariant> &points);
+    void writeFlashMode(int flashMode);
 
     BarcodeDecoder* m_decoder;
     QCamera* m_camera;
@@ -113,6 +119,7 @@ private:
     bool m_flagComponentComplete;
     bool m_flagScanRunning;
     bool m_flagScanAbort;
+    bool m_flashState;
     QTimer* m_timeoutTimer;
 
     QMutex m_scanProcessMutex;

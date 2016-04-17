@@ -125,6 +125,7 @@ Page {
         state = "INACTIVE"
         statusText.text = ""
         actionButton.enabled = false
+        updateFlashIcon(false)
     }
 
     function stateReady() {
@@ -154,6 +155,13 @@ Page {
     function stateAbort() {
         state = "ABORT"
         actionButton.enabled = false
+    }
+
+    function updateFlashIcon(flashState) {
+        console.log("updateFlashIcon, flashState: ", flashState)
+        flash.icon.source = flashState
+                ? "image://theme/icon-camera-flash-on"
+                : "image://theme/icon-camera-flash-off"
     }
 
     state: "INACTIVE"
@@ -259,6 +267,10 @@ Page {
                     stateReady()
                 }
             }
+
+            onFlashStateChanged: {
+                updateFlashIcon(currentState)
+            }
         }
     }
 
@@ -335,28 +347,17 @@ Page {
                 width: parent.width - Theme.paddingLarge * 2
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                // doesn't work
-                /*
                 IconButton {
                     id: flash
-
-                    property bool checked: false
-
-                    icon.source: checked
-                                 ? "image://theme/icon-camera-flash-on"
-                                 : "image://theme/icon-camera-flash-off"
+                    icon.source: "image://theme/icon-camera-flash-off"
                     onClicked: {
-                        var success = scanner.toggleFlash(flash.checked)
-                        if (!success) {
-                            checked = !checked
-                        }
+                        scanner.toggleFlash()
                     }
                 }
-                */
 
                 Slider {
                     id: zoomSlider
-                    width: parent.width
+                    width: parent.width - flash.width
                     minimumValue: 1.0
                     maximumValue: 70.0
                     value: 1

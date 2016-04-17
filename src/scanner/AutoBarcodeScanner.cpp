@@ -32,6 +32,9 @@ THE SOFTWARE.
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
 
+#include <iostream>
+#include <fstream>
+
 AutoBarcodeScanner::AutoBarcodeScanner(QObject * parent)
     : QObject(parent)
     , m_decoder(new BarcodeDecoder(this))
@@ -40,6 +43,7 @@ AutoBarcodeScanner::AutoBarcodeScanner(QObject * parent)
     , m_flagComponentComplete(false)
     , m_flagScanRunning(false)
     , m_flagScanAbort(false)
+    , m_flashState(false)
     , m_timeoutTimer(new QTimer(this))
     , m_markerColor(QColor(0, 255, 0)) // default green
 {
@@ -73,6 +77,10 @@ AutoBarcodeScanner::~AutoBarcodeScanner() {
     if (m_camera->state() == QCamera::ActiveState) {
         qDebug() << "stopping camera ...";
         m_camera->stop();
+    }
+
+    if (m_flashState) {
+        toggleFlash();
     }
 }
 
@@ -120,27 +128,23 @@ void AutoBarcodeScanner::startCamera() {
     }
 }
 
-bool AutoBarcodeScanner::toggleFlash(bool status) {
+void AutoBarcodeScanner::toggleFlash() {
     qDebug() << "camera has state: " << m_camera->state();
 
     if (isJollaCameraRunning()) {
-        return false;
+        return;
     }
 
-    if (m_camera->state() != QCamera::ActiveState) {
-        qDebug() << "camera is not started";
-        return false;
-    }
+    m_flashState = !m_flashState;
+    writeFlashMode(m_flashState);
+    emit flashStateChanged(m_flashState);
+}
 
-    if (status) {
-        m_camera->exposure()->setFlashMode(
-                    QCameraExposure::FlashVideoLight
-                    | QCameraExposure::FlashOn);
-    }
-    else {
-        m_camera->exposure()->setFlashMode(QCameraExposure::FlashOff);
-    }
-    return true;
+void AutoBarcodeScanner::writeFlashMode(int flashMode) {
+    std::ofstream io;
+    io.open("/sys/kernel/debug/flash_adp1650/mode");
+    io << flashMode;
+    io.close();
 }
 
 void AutoBarcodeScanner::zoomTo(qreal digitalZoom) {
