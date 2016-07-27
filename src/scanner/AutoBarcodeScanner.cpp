@@ -49,7 +49,7 @@ AutoBarcodeScanner::AutoBarcodeScanner(QObject * parent)
 {
     qDebug() << "start init AutoBarcodeScanner";
 
-    m_camera->exposure()->setExposureCompensation(2.0);
+    m_camera->exposure()->setExposureCompensation(1.0);
     m_camera->exposure()->setExposureMode(QCameraExposure::ExposureAuto);
     m_camera->exposure()->setFlashMode(QCameraExposure::FlashOff);
 
