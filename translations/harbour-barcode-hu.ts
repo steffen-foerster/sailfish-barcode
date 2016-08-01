@@ -150,7 +150,7 @@
     </message>
     <message>
         <source>Max history size (saved values: %1)</source>
-        <translation>Tárol beolvasások száma (%1 jelenleg)</translation>
+        <translation type="unfinished">Tárolt beolvasások száma (%1 jelenleg)</translation>
     </message>
     <message>
         <source>History</source>
