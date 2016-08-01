@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="hu_HU">
+<TS version="2.0" language="hu_HU">
 <context>
     <name>AboutPage</name>
     <message>
@@ -21,11 +21,11 @@
     </message>
     <message>
         <source>Restriction</source>
-        <translation>Megszorítás</translation>
+        <translation>Korlátozások</translation>
     </message>
     <message>
         <source>This app prevents a scan if the Jolla Camera app is running. This restriction helps to avoid an interference of the Camera app.</source>
-        <translation>Ez az alkalmazás nem tud kódot beolvasni amíg kamera alkalmazás fut. Ez a megszorítás segít elkerülni a kamera alkalmazással összeakadást.</translation>
+        <translation>Ez az alkalmazás nem tud vonalkódot beolvasni amíg kamera alkalmazás fut. Ez a korlátozás segít elkerülni a kamera alkalmazással történő összeakadást.</translation>
     </message>
     <message>
         <source>Version</source>
@@ -64,7 +64,7 @@
     </message>
     <message>
         <source>Please close the Jolla Camera app.</source>
-        <translation>Kérlek lépj ki a Jolla Kamera app-ból.</translation>
+        <translation>Kérlek lépj ki a kamera alkalmazásból.</translation>
     </message>
     <message>
         <source>Scanning failed (code: %1)! Try again.</source>
@@ -150,7 +150,7 @@
     </message>
     <message>
         <source>Max history size (saved values: %1)</source>
-        <translation>Előzmények maximális hossza. (eddig: %1)</translation>
+        <translation>Tárol beolvasások száma (%1 jelenleg)</translation>
     </message>
     <message>
         <source>History</source>
