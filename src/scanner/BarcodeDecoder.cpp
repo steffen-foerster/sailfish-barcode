@@ -35,7 +35,7 @@ BarcodeDecoder::BarcodeDecoder(QObject *parent)
     , decoder(new QZXing())
 {
     // prepare cache directory
-    QString cacheFolderLocation = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+    QString cacheFolderLocation = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
     cacheCaptureLocation = cacheFolderLocation + "/capture_code.jpg";
     QDir cacheDir(cacheFolderLocation);
 

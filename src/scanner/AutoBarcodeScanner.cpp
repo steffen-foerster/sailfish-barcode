@@ -233,7 +233,8 @@ void AutoBarcodeScanner::processDecode() {
         if (scanActive) {
             QDBusMessage m = QDBusMessage::createMethodCall("org.nemomobile.lipstick", "/org/nemomobile/lipstick/screenshot", "org.nemomobile.lipstick", "saveScreenshot");
             m << m_decoder->getCaptureLocation();
-            QDBusConnection::sessionBus().call(m);
+            QDBusMessage reply = QDBusConnection::sessionBus().call(m);
+            qDebug() << "reply of method call <screenshot>: " << reply;
 
             QImage screenshot(m_decoder->getCaptureLocation());
 
@@ -245,7 +246,7 @@ void AutoBarcodeScanner::processDecode() {
             code = result["content"].toString();
 
             if (code.isEmpty()) {
-                // try for 1D bar code the other orientation
+                // try the other orientation for 1D bar code
                 QTransform transform;
                 transform.rotate(90);
                 copy = copy.transformed(transform);
