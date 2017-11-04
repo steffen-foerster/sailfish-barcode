@@ -231,6 +231,9 @@ void AutoBarcodeScanner::processDecode() {
         m_scanProcessMutex.unlock();
 
         if (scanActive) {
+            if (QFileInfo::exists(m_decoder->getCaptureLocation()))
+                QFile::remove(m_decoder->getCaptureLocation());
+
             QDBusMessage m = QDBusMessage::createMethodCall("org.nemomobile.lipstick", "/org/nemomobile/lipstick/screenshot", "org.nemomobile.lipstick", "saveScreenshot");
             m << m_decoder->getCaptureLocation();
             QDBusMessage reply = QDBusConnection::sessionBus().call(m);
