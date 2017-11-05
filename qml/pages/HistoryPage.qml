@@ -210,8 +210,8 @@ Page {
         }
 
         VerticalScrollDecorator {
-            parent: view
-            flickable: view
+            parent: historyList
+            flickable: historyList
         }
 
         ViewPlaceholder {

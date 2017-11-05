@@ -38,6 +38,9 @@ THE SOFTWARE.
 #include <QtQml/qqmlparserstatus.h>
 #include "BarcodeDecoder.h"
 
+#include <iostream>
+#include <fstream>
+
 class AutoBarcodeScanner : public QObject, public QQmlParserStatus
 {
     Q_OBJECT
@@ -112,6 +115,8 @@ private:
     bool isJollaCameraRunning();
     void markLastCaptureImage(QList<QVariant> &points);
     void writeFlashMode(int flashMode);
+    void createScreeshot();
+    void saveDebugImage(QImage &image, const QString &fileName);
 
     BarcodeDecoder* m_decoder;
     QCamera* m_camera;
