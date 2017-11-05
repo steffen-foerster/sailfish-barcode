@@ -233,12 +233,12 @@ void AutoBarcodeScanner::processDecode() {
         if (scanActive) {
             createScreeshot();
             QImage screenshot(m_decoder->getCaptureLocation());
-            saveDebugImage(screenshot, "codereader_debug_screenshot.jpg");
+            saveDebugImage(screenshot, "debug_screenshot.jpg");
 
             // crop the image - we need only the viewfinder
             QImage copy = screenshot.copy(m_viewFinderRect);
             copy.save(m_decoder->getCaptureLocation());
-            saveDebugImage(copy, "codereader_debug_cropped.jpg");
+            saveDebugImage(copy, "debug_cropped.jpg");
 
             qDebug() << "decoding cropped screenshot ...";
             result = m_decoder->decodeBarcodeFromCache();
@@ -250,7 +250,7 @@ void AutoBarcodeScanner::processDecode() {
                 transform.rotate(90);
                 copy = copy.transformed(transform);
                 copy.save(m_decoder->getCaptureLocation());
-                saveDebugImage(copy, "codereader_debug_transformed.jpg");
+                saveDebugImage(copy, "debug_transformed.jpg");
 
                 qDebug() << "decoding rotated screenshot ...";
                 result = m_decoder->decodeBarcodeFromCache();
@@ -296,7 +296,7 @@ void AutoBarcodeScanner::createScreeshot() {
 }
 
 void AutoBarcodeScanner::saveDebugImage(QImage &image, const QString &fileName) {
-    QString imageLocation = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/" + fileName;
+    QString imageLocation = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/codereader/" + fileName;
     image.save(imageLocation);
     qDebug() << "image saved: " << imageLocation;
 }
