@@ -231,17 +231,16 @@ void AutoBarcodeScanner::processDecode() {
         m_scanProcessMutex.unlock();
 
         if (scanActive) {
-            QDBusMessage m = QDBusMessage::createMethodCall("org.nemomobile.lipstick", "/org/nemomobile/lipstick/screenshot", "org.nemomobile.lipstick", "saveScreenshot");
-            m << m_decoder->getCaptureLocation();
-            QDBusMessage reply = QDBusConnection::sessionBus().call(m);
-            qDebug() << "reply of method call <screenshot>: " << reply;
-
+            createScreeshot();
             QImage screenshot(m_decoder->getCaptureLocation());
+            saveDebugImage(screenshot, "codereader_debug_screenshot.jpg");
 
             // crop the image - we need only the viewfinder
             QImage copy = screenshot.copy(m_viewFinderRect);
             copy.save(m_decoder->getCaptureLocation());
+            saveDebugImage(copy, "codereader_debug_cropped.jpg");
 
+            qDebug() << "decoding cropped screenshot ...";
             result = m_decoder->decodeBarcodeFromCache();
             code = result["content"].toString();
 
@@ -251,7 +250,9 @@ void AutoBarcodeScanner::processDecode() {
                 transform.rotate(90);
                 copy = copy.transformed(transform);
                 copy.save(m_decoder->getCaptureLocation());
+                saveDebugImage(copy, "codereader_debug_transformed.jpg");
 
+                qDebug() << "decoding rotated screenshot ...";
                 result = m_decoder->decodeBarcodeFromCache();
                 code = result["content"].toString();
             }
@@ -280,6 +281,25 @@ void AutoBarcodeScanner::processDecode() {
     qDebug() << "m_scanProcessStopped.wakeAll";
     m_scanProcessStopped.wakeAll();
     m_scanProcessMutex.unlock();
+}
+
+void AutoBarcodeScanner::createScreeshot() {
+    QFile screenshotFile(m_decoder->getCaptureLocation());
+    if (screenshotFile.exists()) {
+        bool removed = screenshotFile.remove();
+        qDebug() << "screeshot file removed: " << removed;
+    }
+
+    QDBusMessage m = QDBusMessage::createMethodCall("org.nemomobile.lipstick", "/org/nemomobile/lipstick/screenshot", "org.nemomobile.lipstick", "saveScreenshot");
+    m << m_decoder->getCaptureLocation();
+    QDBusMessage reply = QDBusConnection::sessionBus().call(m);
+    qDebug() << "reply of method call <screenshot>: " << reply;
+}
+
+void AutoBarcodeScanner::saveDebugImage(QImage &image, const QString &fileName) {
+    QString imageLocation = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/" + fileName;
+    image.save(imageLocation);
+    qDebug() << "image saved: " << imageLocation;
 }
 
 void AutoBarcodeScanner::markLastCaptureImage(QList<QVariant> &points) {
