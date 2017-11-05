@@ -14,7 +14,7 @@ Name:       harbour-barcode
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    Code Reader
 Version:    0.7.12
-Release:    1
+Release:    2
 Group:      Qt/Qt
 License:    LICENSE
 URL:        https://github.com/steffen-foerster/sailfish-barcode
