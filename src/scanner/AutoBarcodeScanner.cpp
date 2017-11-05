@@ -284,10 +284,9 @@ void AutoBarcodeScanner::processDecode() {
 }
 
 void AutoBarcodeScanner::createScreeshot() {
-    QFile screenshotFile(m_decoder->getCaptureLocation());
-    if (screenshotFile.exists()) {
-        bool removed = screenshotFile.remove();
-        qDebug() << "screeshot file removed: " << removed;
+    if (QFileInfo::exists(m_decoder->getCaptureLocation())) {
+        bool removed = QFile::remove(m_decoder->getCaptureLocation());
+        qDebug() << "old screeshot file removed: " << removed;
     }
 
     QDBusMessage m = QDBusMessage::createMethodCall("org.nemomobile.lipstick", "/org/nemomobile/lipstick/screenshot", "org.nemomobile.lipstick", "saveScreenshot");
