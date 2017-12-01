@@ -34,6 +34,7 @@ THE SOFTWARE.
 #include <QCameraFocus>
 #include <QThread>
 #include <QColor>
+#include <QVideoProbe>
 #include <QtConcurrent>
 #include <QtQml/qqmlparserstatus.h>
 #include "BarcodeDecoder.h"
@@ -69,7 +70,6 @@ public:
         m_markerColor = QColor(red, green, blue);
     }
 
-    // page have to stop the camera if application is deactivated
     Q_INVOKABLE void startCamera();
 
     Q_ENUMS(ErrorCode)
@@ -97,12 +97,14 @@ signals:
     void error(ErrorCode errorCode);
     void mediaObjectChanged();
     void flashStateChanged(bool currentState);
+    void frameAvailable(QImage frame);
 
 public slots:
     void slotScanningTimeout();
     void slotCameraError(QCamera::Error value);
     void slotStatusChanged(QCamera::Status status);
     void slotStateChanged(QCamera::State state);
+    void slotFrameAvailable(QVideoFrame frame);
 
 
 protected:
@@ -113,7 +115,7 @@ protected:
 private:
     void createConnections();
     bool isJollaCameraRunning();
-    void markLastCaptureImage(QList<QVariant> &points);
+    void markLastCaptureImage(QList<QVariant> &points, QImage frame);
     void writeFlashMode(int flashMode);
     void createScreeshot();
     void saveDebugImage(QImage &image, const QString &fileName);
@@ -133,6 +135,9 @@ private:
     // options
     QRect m_viewFinderRect;
     QColor m_markerColor;
+
+    QImage m_currentFrame;
+    QVideoProbe* m_probe;
 };
 
 #endif // AUTOBARCODESCANNER_H

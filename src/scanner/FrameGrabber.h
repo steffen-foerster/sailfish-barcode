@@ -1,7 +1,10 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2014 Steffen Förster
+Copyright (c) 2017 Steffen Förster
+
+The idea is borrowed from "How to grab video frames directly from QCamera"
+(http://omg-it.works/how-to-grab-video-frames-directly-from-qcamera/)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,48 +25,27 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef BARCODEDECODER_H
-#define BARCODEDECODER_H
+#ifndef FRAMEGRABBER_H
+#define FRAMEGRABBER_H
 
-#include <QObject>
-#include <QString>
+#include <QAbstractVideoSurface>
+#include <QList>
 #include <QImage>
-#include "qzxing/qzxing.h"
 
-class BarcodeDecoder : public QObject
+class FrameGrabber : public QAbstractVideoSurface
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString captureLocation READ getCaptureLocation)
-
 public:
-    explicit BarcodeDecoder(QObject *parent = 0);
-    virtual ~BarcodeDecoder();
+    FrameGrabber(QObject *parent = 0);
 
-    QVariantHash decodeBarcodeFromCache();
-    QVariantHash decodeBarcode(QImage image);
+    QList<QVideoFrame::PixelFormat> supportedPixelFormats(QAbstractVideoBuffer::HandleType handleType) const;
 
-    void setDecoderFormat(const int &format);
-    QString getCaptureLocation() const;
-
-    enum CodeFormat {
-        CodeFormat_QR_CODE = 0,
-        CodeFormat_EAN = 1,
-        CodeFormat_UPC = 2,
-        CodeFormat_DATA_MATRIX = 3,
-        CodeFormat_CODE_39_128 = 4,
-        CodeFormat_ITF = 5,
-        CodeFormat_Aztec = 6
-    };
+    bool present(const QVideoFrame &frame);
 
 signals:
-
-public slots:
-
-private:
-    QString cacheCaptureLocation;
-    class QZXing *decoder;
+    void frameAvailable(QImage frame);
 
 };
 
-#endif // BARCODEDECODER_H
+#endif // FRAMEGRABBER_H

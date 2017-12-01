@@ -87,3 +87,8 @@ QVariantHash BarcodeDecoder::decodeBarcodeFromCache() {
     QVariantHash result = decoder->decodeImageEx(img);
     return result;
 }
+
+QVariantHash BarcodeDecoder::decodeBarcode(QImage image) {
+    QVariantHash result = decoder->decodeImageEx(image);
+    return result;
+}

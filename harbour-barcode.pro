@@ -23,7 +23,8 @@ SOURCES += \
     src/scanner/ImagePostProcessing.cpp \
     src/scanner/BarcodeDecoder.cpp \
     src/scanner/AutoBarcodeScanner.cpp \
-    src/scanner/CaptureImageProvider.cpp
+    src/scanner/CaptureImageProvider.cpp \
+    src/scanner/FrameGrabber.cpp
 
 OTHER_FILES += \
     qml/cover/CoverPage.qml \
@@ -79,5 +80,6 @@ HEADERS += \
     src/scanner/ImagePostProcessing.h \
     src/scanner/BarcodeDecoder.h \
     src/scanner/AutoBarcodeScanner.h \
-    src/scanner/CaptureImageProvider.h
+    src/scanner/CaptureImageProvider.h \
+    src/scanner/FrameGrabber.h
 

@@ -28,6 +28,8 @@ THE SOFTWARE.
 #include <QProcess>
 #include <QPainter>
 #include <QBrush>
+#include <QImage>
+#include <QVideoProbe>
 #include <QStandardPaths>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
@@ -46,6 +48,8 @@ AutoBarcodeScanner::AutoBarcodeScanner(QObject * parent)
     , m_flashState(false)
     , m_timeoutTimer(new QTimer(this))
     , m_markerColor(QColor(0, 255, 0)) // default green
+    , m_currentFrame(QImage())
+    , m_probe(new QVideoProbe(this))
 {
     qDebug() << "start init AutoBarcodeScanner";
 
@@ -58,6 +62,7 @@ AutoBarcodeScanner::AutoBarcodeScanner(QObject * parent)
     m_camera->focus()->setFocusPointMode(QCameraFocus::FocusPointAuto);
 
     createConnections();
+
     m_timeoutTimer->setSingleShot(true);
     connect(m_timeoutTimer, SIGNAL(timeout()), this, SLOT(slotScanningTimeout()));
 }
@@ -89,10 +94,11 @@ void AutoBarcodeScanner::createConnections() {
     connect(m_camera, SIGNAL(error(QCamera::Error)), this, SLOT(slotCameraError(QCamera::Error)));
 
     // for debugging
-    connect(m_camera, SIGNAL(statusChanged(QCamera::Status)),
-            this, SLOT(slotStatusChanged(QCamera::Status)));
-    connect(m_camera, SIGNAL(stateChanged(QCamera::State)),
-            this, SLOT(slotStateChanged(QCamera::State)));
+    connect(m_camera, SIGNAL(statusChanged(QCamera::Status)), this, SLOT(slotStatusChanged(QCamera::Status)));
+    connect(m_camera, SIGNAL(stateChanged(QCamera::State)), this, SLOT(slotStateChanged(QCamera::State)));
+
+    // video probe
+    connect(m_probe, SIGNAL(videoFrameProbed(QVideoFrame)), this, SLOT(slotFrameAvailable(QVideoFrame)));
 }
 
 void AutoBarcodeScanner::classBegin() {
@@ -119,6 +125,10 @@ void AutoBarcodeScanner::startCamera() {
             emit error(AutoBarcodeScanner::CameraUnavailable);
             return;
         }
+
+        // it's not working on SailfishOS 2.1.3.7
+        bool success = m_probe->setSource(m_camera);
+        qDebug() << "source is valid: " << success;
 
         qDebug() << "starting camera ...";
         m_camera->start();
@@ -179,6 +189,8 @@ void AutoBarcodeScanner::startScanning(int timeout) {
     m_flagScanAbort = false;
     m_timeoutTimer->start(timeout);
 
+    m_currentFrame = QImage();
+
     QtConcurrent::run(this, &AutoBarcodeScanner::processDecode);
 }
 
@@ -187,6 +199,10 @@ void AutoBarcodeScanner::stopScanning() {
     m_scanProcessMutex.lock();
     if (m_flagScanRunning) {
         m_flagScanAbort = true;
+
+        //m_camera->stop();
+        //m_camera->start();
+
         qDebug() << "m_scanProcessStopped.wait";
         m_scanProcessStopped.wait(&m_scanProcessMutex);
     }
@@ -218,6 +234,8 @@ void AutoBarcodeScanner::processDecode() {
     qDebug() << "processDecode() is called from " << QThread::currentThread();
 
     bool scanActive = true;
+    bool frameAvailable = false;
+    QImage frame;
     QString code;
     QVariantHash result;
 
@@ -228,32 +246,28 @@ void AutoBarcodeScanner::processDecode() {
         if (!scanActive) {
             qDebug() << "decoding aborted";
         }
+
+        if (!m_currentFrame.isNull()) {
+            frameAvailable = true;
+            qDebug() << "frame is available";
+            frame = QImage(m_currentFrame);
+        }
+
         m_scanProcessMutex.unlock();
 
-        if (scanActive) {
-            createScreeshot();
-            QImage screenshot(m_decoder->getCaptureLocation());
-            saveDebugImage(screenshot, "debug_screenshot.jpg");
-
-            // crop the image - we need only the viewfinder
-            QImage copy = screenshot.copy(m_viewFinderRect);
-            copy.save(m_decoder->getCaptureLocation());
-            saveDebugImage(copy, "debug_cropped.jpg");
-
-            qDebug() << "decoding cropped screenshot ...";
-            result = m_decoder->decodeBarcodeFromCache();
+        if (scanActive && frameAvailable) {
+            qDebug() << "decoding frame ...";
+            result = m_decoder->decodeBarcode(frame);
             code = result["content"].toString();
 
             if (code.isEmpty()) {
                 // try the other orientation for 1D bar code
                 QTransform transform;
                 transform.rotate(90);
-                copy = copy.transformed(transform);
-                copy.save(m_decoder->getCaptureLocation());
-                saveDebugImage(copy, "debug_transformed.jpg");
+                frame = frame.transformed(transform);
 
-                qDebug() << "decoding rotated screenshot ...";
-                result = m_decoder->decodeBarcodeFromCache();
+                qDebug() << "decoding rotated frame ...";
+                result = m_decoder->decodeBarcode(frame);
                 code = result["content"].toString();
             }
 
@@ -267,7 +281,7 @@ void AutoBarcodeScanner::processDecode() {
 
     if (!result.empty()) {
         QList<QVariant> points = result["points"].toList();
-        markLastCaptureImage(points);
+        markLastCaptureImage(points, frame);
     }
 
     qDebug() << "decoding has been finished, result: " + code;
@@ -301,9 +315,8 @@ void AutoBarcodeScanner::saveDebugImage(QImage &image, const QString &fileName) 
     qDebug() << "image saved: " << imageLocation;
 }
 
-void AutoBarcodeScanner::markLastCaptureImage(QList<QVariant> &points) {
-    QImage lastScreenshot(m_decoder->getCaptureLocation());
-    QPainter painter(&lastScreenshot);
+void AutoBarcodeScanner::markLastCaptureImage(QList<QVariant> &points, QImage frame) {
+    QPainter painter(&frame);
     painter.setPen(m_markerColor);
 
     qDebug() << "recognized points: " << points.size();
@@ -315,15 +328,15 @@ void AutoBarcodeScanner::markLastCaptureImage(QList<QVariant> &points) {
     painter.end();
 
     // rotate to screen orientation
-    if (lastScreenshot.width() > lastScreenshot.height()) {
+    if (frame.width() > frame.height()) {
         qDebug() << "rotating image ...";
         QTransform transform;
         transform.rotate(270);
-        lastScreenshot = lastScreenshot.transformed(transform);
+        frame = frame.transformed(transform);
         qDebug() << "rotation finished";
     }
 
-    CaptureImageProvider::setMarkedImage(lastScreenshot);
+    CaptureImageProvider::setMarkedImage(frame);
 }
 
 void AutoBarcodeScanner::slotScanningTimeout() {
@@ -331,6 +344,30 @@ void AutoBarcodeScanner::slotScanningTimeout() {
     m_flagScanAbort = true;
     qDebug() << "decoding aborted by timeout";
     m_scanProcessMutex.unlock();
+}
+
+void AutoBarcodeScanner::slotFrameAvailable(QVideoFrame frame) {
+    qDebug() << "slotFrameAvailable ...";
+    if (frame.isValid()) {
+        qDebug() << "clone frame ...";
+        QVideoFrame cloneFrame(frame);
+        qDebug() << "map frame ...";
+        cloneFrame.map(QAbstractVideoBuffer::ReadOnly);
+        qDebug() << "build image ...";
+        const QImage image(cloneFrame.bits(),
+                           cloneFrame.width(),
+                           cloneFrame.height(),
+                           QVideoFrame::imageFormatFromPixelFormat(cloneFrame .pixelFormat()));
+        qDebug() << "unmap frame ...";
+        cloneFrame.unmap();
+        qDebug() << "frame is valid";
+
+        m_scanProcessMutex.lock();
+        m_currentFrame = image;
+        m_scanProcessMutex.unlock();
+    } else {
+        qDebug() << "frame isn't valid";
+    }
 }
 
 // ------------------------------------------------------------
