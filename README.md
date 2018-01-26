@@ -1,3 +1,8 @@
+>
+> The author is no longer working on this project. Thanks for your support!
+>
+
+
 Code Reader for Sailfish OS
 ===========================
 
