@@ -34,7 +34,6 @@ import "../js/Utils.js" as Utils
 Page {
     id: scanPage
 
-    property variant scanner
     property Item viewFinder
     property variant beep
 
@@ -43,39 +42,36 @@ Page {
 
     property int scanTimeout: 60
 
-    property int viewFinder_x: scanPage.width * 0.22
-    property int viewFinder_y: Theme.paddingLarge
-    property int viewFinder_width: scanPage.width * 0.56
-    property int viewFinder_height: scanPage.height * 0.56
-
     function createScanner() {
-        if (scanner) {
-            console.log("scanner has been already created ...")
+        if (viewFinder) {
             return
         }
 
-        console.log("creating scanner and viewfinder ...")
-        scanner = scannerComponent.createObject(scanPage)
-        scanner.setViewFinderRect(viewFinder_x, viewFinder_y, viewFinder_width, viewFinder_height)
+        console.log("creating viewfinder ...")
         viewFinder = viewFinderComponent.createObject(parentViewFinder)
-        viewFinder.source = scanner
 
         beep = beepComponent.createObject(scanPage)
         beep.muted = !Settings.getBoolean(Settings.keys.SOUND)
 
-        scanner.startCamera()
+        if (scanner.isJollaCameraRunning()) {
+            stateJollaCamera()
+        } else if (viewFinder.source.availability === Camera.Available) {
+            viewFinder.source.start()
+        } else {
+            stateAbort();
+        }
     }
 
     function destroyScanner() {
-        if (!scanner) {
-            console.log("scanner has been already destroyed ...")
+        if (!viewFinder) {
             return
         }
 
-        console.log("destroying scanner and viewfinder ...")
+        console.log("destroying viewfinder ...")
+        scanner.stopScanning()
+        viewFinder.source.stop()
         viewFinder.destroy()
-        scanner.destroy()
-        scanner = null
+        viewFinder = null
 
         beep.destroy()
 
@@ -210,67 +206,55 @@ Page {
         }
     }
 
-    Component {
-        id: scannerComponent
+    function cameraStarted() {
+        console.log("camera is started")
 
-        AutoBarcodeScanner {
+        if (!Qt.application.active) {
+            // use case: start app => lock device immediately => signal Qt.application.onActiveChanged is not emitted
+            console.log("WARN: device immediately locked")
+            destroyScanner()
+            return
+        }
 
-            onCameraStarted: {
-                console.log("camera is started")
+        stateReady()
 
-                if (!Qt.application.active) {
-                    // use case: start app => lock device immediately => signal Qt.application.onActiveChanged is not emitted
-                    console.log("WARN: device immediately locked")
-                    destroyScanner()
-                    return
-                }
+        if (flagScanByCover || flagAutoScan && Settings.getBoolean(Settings.keys.SCAN_ON_START)) {
+            startScan();
+        }
 
-                stateReady()
+        flagAutoScan = false
+        flagScanByCover = false
+    }
 
-                if (flagScanByCover || flagAutoScan && Settings.getBoolean(Settings.keys.SCAN_ON_START)) {
-                    startScan();
-                }
+    AutoBarcodeScanner {
+        id: scanner
 
-                flagAutoScan = false
-                flagScanByCover = false
-            }
+        viewFinderItem: parentViewFinder
 
-            onDecodingFinished: {
-                console.log("decoding finished, code: ", code)
-                statusText.text = ""
-                if (scanPage.state !== "ABORT") {
-                    if (code.length > 0) {
-                        applyResult(code)
+        onDecodingFinished: {
+            console.log("decoding finished, code: ", code)
+            statusText.text = ""
+            if (scanPage.state !== "ABORT") {
+                if (code.length > 0) {
+                    applyResult(code)
 
-                        var resultViewDuration = Settings.get(Settings.keys.RESULT_VIEW_DURATION)
-                        if (resultViewDuration > 0) {
-                            viewFinder.children[0].source = "image://scanner/marked"
-                            viewFinder.children[0].visible = true
-                            resultViewTimer.interval = resultViewDuration * 1000
-                            resultViewTimer.restart()
-                        }
+                    var resultViewDuration = Settings.get(Settings.keys.RESULT_VIEW_DURATION)
+                    if (resultViewDuration > 0) {
+                        viewFinder.children[0].source = "image://scanner/marked"
+                        viewFinder.children[0].visible = true
+                        resultViewTimer.interval = resultViewDuration * 1000
+                        resultViewTimer.restart()
                     }
-                    else {
-                        statusText.text = qsTr("No code detected! Try again.")
-                    }
-                }
-                stateReady()
-            }
-
-            onError: {
-                console.log("scanning failed: ", errorCode)
-                if (errorCode === AutoBarcodeScanner.JollaCameraRunning) {
-                    stateJollaCamera()
                 }
                 else {
-                    statusText.text = qsTr("Scanning failed (code: %1)! Try again.").arg(errorCode)
-                    stateReady()
+                    statusText.text = qsTr("No code detected! Try again.")
                 }
             }
+            stateReady()
+        }
 
-            onFlashStateChanged: {
-                updateFlashIcon(currentState)
-            }
+        onFlashStateChanged: {
+            updateFlashIcon(currentState)
         }
     }
 
@@ -279,9 +263,25 @@ Page {
 
         VideoOutput {
             anchors.fill: parent
-            //focus: visible // to receive focus when visible
             fillMode: VideoOutput.PreserveAspectCrop
-            orientation: -90
+
+            source: Camera {
+                flash.mode: Camera.FlashOff
+                exposure {
+                    exposureCompensation: 1.0
+                    exposureMode: Camera.ExposureAuto
+                }
+                focus {
+                    focusMode: Camera.FocusContinuous
+                    focusPointMode: CameraFocus.FocusPointAuto
+                }
+                onCameraStateChanged: {
+                    console.log(cameraState)
+                    if (cameraState == Camera.ActiveState) {
+                        cameraStarted()
+                    }
+                }
+            }
 
             Image {
                 id: markerImage
@@ -327,11 +327,11 @@ Page {
 
         Column {
             id: flickableColumn
+            y: Theme.paddingLarge
             width: parent.width
             spacing: Theme.paddingLarge
 
             anchors {
-                top: parent.top
                 topMargin: Theme.paddingLarge
             }
 
@@ -339,8 +339,17 @@ Page {
                 id: parentViewFinder
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                width: viewFinder_width
-                height: viewFinder_height
+                width: Math.floor(scanPage.width * 0.56)
+                height: Math.floor(scanPage.height * 0.56)
+
+                onWidthChanged: updateViewFinderPosition()
+                onHeightChanged: updateViewFinderPosition()
+                onXChanged: updateViewFinderPosition()
+                onYChanged: updateViewFinderPosition()
+
+                function updateViewFinderPosition() {
+                    scanner.setViewFinderRect(Qt.rect(x, y + flickableColumn.y, width, height))
+                }
             }
 
             Row {
@@ -363,8 +372,8 @@ Page {
                     value: 1
                     stepSize: 5
                     onValueChanged: {
-                        if (scanner) {
-                            scanner.zoomTo(value)
+                        if (viewFinder) {
+                            viewFinder.source.digitalZoom = value
                             saveZoomDelay.restart()
                         }
                     }
@@ -380,7 +389,7 @@ Page {
                 }
             }
 
-            Text {
+            Label {
                 id: statusText
                 text: ""
                 anchors.horizontalCenter: parent.horizontalCenter

@@ -28,107 +28,73 @@ THE SOFTWARE.
 #ifndef AUTOBARCODESCANNER_H
 #define AUTOBARCODESCANNER_H
 
-#include <QCamera>
-#include <QCameraImageCapture>
-#include <QCameraExposure>
-#include <QCameraFocus>
-#include <QThread>
 #include <QColor>
 #include <QtConcurrent>
-#include <QtQml/qqmlparserstatus.h>
+#include <QtQuick/QQuickItem>
 #include "BarcodeDecoder.h"
 
-#include <iostream>
-#include <fstream>
-
-class AutoBarcodeScanner : public QObject, public QQmlParserStatus
+class AutoBarcodeScanner : public QObject
 {
     Q_OBJECT
-    Q_INTERFACES(QQmlParserStatus)
 
 public:
     AutoBarcodeScanner(QObject *parent = 0);
     virtual ~AutoBarcodeScanner();
 
-    // see qdeclarativecamera_p.h
-    Q_PROPERTY(QObject *mediaObject READ mediaObject NOTIFY mediaObjectChanged SCRIPTABLE false DESIGNABLE false)
-
-    Q_PROPERTY(bool flashState READ flashState)
+    Q_PROPERTY(QObject* viewFinderItem READ viewFinderItem WRITE setViewFinderItem NOTIFY viewFinderItemChanged)
+    Q_PROPERTY(bool flashState READ flashState NOTIFY flashStateChanged)
 
     Q_INVOKABLE void startScanning(int timeout);
     Q_INVOKABLE void stopScanning();
     Q_INVOKABLE void toggleFlash();
-    Q_INVOKABLE void zoomTo(qreal digitalZoom);
     Q_INVOKABLE void setDecoderFormat(int format);
-
-    Q_INVOKABLE void setViewFinderRect(int x, int y, int width, int height) {
-        m_viewFinderRect = QRect(x, y, width, height);
-    }
 
     Q_INVOKABLE void setMarkerColor(int red, int green, int blue) {
         m_markerColor = QColor(red, green, blue);
     }
 
-    // page have to stop the camera if application is deactivated
-    Q_INVOKABLE void startCamera();
+    Q_INVOKABLE bool isJollaCameraRunning();
+    Q_INVOKABLE void setViewFinderRect(QRect rect);
 
-    Q_ENUMS(ErrorCode)
     Q_ENUMS(AutoBarcodeScanner::CodeFormat)
 
     // must be public, to start in new thread
     void processDecode();
 
-    // see qdeclarativecamera_p.h
-    QObject *mediaObject() { return m_camera; }
-
     bool flashState() const { return m_flashState; }
+    QObject* viewFinderItem() const { return m_viewFinderItem; }
 
-    enum ErrorCode {
-        LockFailed,
-        CameraUnavailable,
-        CaptureFailed,
-        CameraError,
-        JollaCameraRunning
-    };
+    void setViewFinderItem(QObject* item);
 
 signals:
-    void cameraStarted();
-    void decodingFinished(const QString &code);
-    void error(ErrorCode errorCode);
-    void mediaObjectChanged();
+    void decodingDone(QImage image, QVariantList points, QString code);
+    void decodingFinished(QString code);
     void flashStateChanged(bool currentState);
+    void viewFinderItemChanged();
+    void needImage();
 
 public slots:
     void slotScanningTimeout();
-    void slotCameraError(QCamera::Error value);
-    void slotStatusChanged(QCamera::Status status);
-    void slotStateChanged(QCamera::State state);
-
-
-protected:
-    // see qdeclarativecamera_p.h
-    void classBegin();
-    void componentComplete();
+    void slotDecodingDone(QImage image, QVariantList points, QString code);
+    void slotGrabImage();
 
 private:
     void createConnections();
-    bool isJollaCameraRunning();
-    void markLastCaptureImage(QList<QVariant> &points);
+    void markLastCaptureImage(QImage image, QVariantList points);
     void writeFlashMode(int flashMode);
-    void createScreeshot();
-    void saveDebugImage(QImage &image, const QString &fileName);
+    static void saveDebugImage(QImage &image, const QString &fileName);
 
     BarcodeDecoder* m_decoder;
-    QCamera* m_camera;
-    QCameraImageCapture* m_imageCapture;
-    bool m_flagComponentComplete;
+    QImage m_captureImage;
+    QQuickItem* m_viewFinderItem;
     bool m_flagScanRunning;
     bool m_flagScanAbort;
     bool m_flashState;
     QTimer* m_timeoutTimer;
 
     QMutex m_scanProcessMutex;
-    QWaitCondition m_scanProcessStopped;
+    QWaitCondition m_scanProcessEvent;
+    QFuture<void> m_scanFuture;
 
     // options
     QRect m_viewFinderRect;
