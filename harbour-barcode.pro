@@ -15,8 +15,7 @@ TARGET = harbour-barcode
 CONFIG += sailfishapp
 
 QT += multimedia \
-    concurrent \
-    dbus
+    concurrent
 
 SOURCES += \
     src/harbour-barcode.cpp \

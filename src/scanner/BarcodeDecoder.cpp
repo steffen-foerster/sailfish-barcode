@@ -23,8 +23,6 @@ THE SOFTWARE.
 */
 
 #include <QDebug>
-#include <QStandardPaths>
-#include <QDir>
 #include <QImage>
 #include "qzxing/qzxing.h"
 #include "BarcodeDecoder.h"
@@ -34,23 +32,13 @@ BarcodeDecoder::BarcodeDecoder(QObject *parent)
     // ZXing
     , decoder(new QZXing())
 {
-    // prepare cache directory
-    QString cacheFolderLocation = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + "/codereader";
-    cacheCaptureLocation = cacheFolderLocation + "/screenshot.jpg";
-    qDebug() << "screenshot location: " << cacheCaptureLocation;
-
-    QDir cacheDir(cacheFolderLocation);
-
-    if (!cacheDir.exists()) {
-        cacheDir.mkpath(".");
-    }
 }
 
 BarcodeDecoder::~BarcodeDecoder() {
     delete decoder;
 }
 
-void BarcodeDecoder::setDecoderFormat(const int &format) {
+void BarcodeDecoder::setDecoderFormat(int format) {
     qDebug() << "using decoder format: " << format;
     if (format == CodeFormat_QR_CODE) {
         decoder->setDecoder(QZXing::DecoderFormat_QR_CODE);
@@ -78,12 +66,6 @@ void BarcodeDecoder::setDecoderFormat(const int &format) {
     }
 }
 
-QString BarcodeDecoder::getCaptureLocation() const {
-    return cacheCaptureLocation;
-}
-
-QVariantHash BarcodeDecoder::decodeBarcodeFromCache() {
-    QImage img(cacheCaptureLocation);
-    QVariantHash result = decoder->decodeImageEx(img);
-    return result;
+QVariantHash BarcodeDecoder::decodeBarcode(QImage img) {
+    return decoder->decodeImageEx(img);
 }

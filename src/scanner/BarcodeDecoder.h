@@ -26,23 +26,19 @@ THE SOFTWARE.
 #define BARCODEDECODER_H
 
 #include <QObject>
-#include <QString>
 #include "qzxing/qzxing.h"
 
 class BarcodeDecoder : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString captureLocation READ getCaptureLocation)
-
 public:
     explicit BarcodeDecoder(QObject *parent = 0);
     virtual ~BarcodeDecoder();
 
-    QVariantHash decodeBarcodeFromCache();
+    QVariantHash decodeBarcode(QImage img);
 
-    void setDecoderFormat(const int &format);
-    QString getCaptureLocation() const;
+    void setDecoderFormat(int format);
 
     enum CodeFormat {
         CodeFormat_QR_CODE = 0,
@@ -54,14 +50,8 @@ public:
         CodeFormat_Aztec = 6
     };
 
-signals:
-
-public slots:
-
 private:
-    QString cacheCaptureLocation;
     class QZXing *decoder;
-
 };
 
 #endif // BARCODEDECODER_H
