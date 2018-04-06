@@ -35,6 +35,8 @@ THE SOFTWARE.
 #include <QThread>
 #include <QColor>
 #include <QtConcurrent>
+#include <QGuiApplication>
+#include <QQuickWindow>
 #include <QtQml/qqmlparserstatus.h>
 #include "BarcodeDecoder.h"
 
@@ -129,6 +131,7 @@ private:
 
     QMutex m_scanProcessMutex;
     QWaitCondition m_scanProcessStopped;
+    QQuickWindow* m_mainWindow;
 
     // options
     QRect m_viewFinderRect;

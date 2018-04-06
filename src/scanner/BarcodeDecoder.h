@@ -40,7 +40,7 @@ public:
     virtual ~BarcodeDecoder();
 
     QVariantHash decodeBarcodeFromCache();
-
+    QVariantHash decodeBarcodeFromImage(QImage &img);
     void setDecoderFormat(const int &format);
     QString getCaptureLocation() const;
 
