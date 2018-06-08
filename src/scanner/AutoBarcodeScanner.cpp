@@ -25,10 +25,12 @@ THE SOFTWARE.
 #include <QDebug>
 #include "AutoBarcodeScanner.h"
 #include "CaptureImageProvider.h"
+#include <QBrush>
+#include <QFile>
 #include <QProcess>
 #include <QPainter>
-#include <QBrush>
 #include <QStandardPaths>
+#include <QTextStream>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
 
@@ -141,10 +143,24 @@ void AutoBarcodeScanner::toggleFlash() {
 }
 
 void AutoBarcodeScanner::writeFlashMode(int flashMode) {
-    std::ofstream io;
-    io.open("/sys/kernel/debug/flash_adp1650/mode");
-    io << flashMode;
-    io.close();
+    QStringList filenames;
+    
+    filenames << "/sys/class/leds/led:flash_torch/brightness"; // LG Nexus 5, Fairphone Fairphone 2
+    filenames << "/sys/class/leds/torch-flash/flash_light";    // Motorola Photon Q
+    filenames << "/sys/class/leds/torch-light0/brightness";    // Intex Aqua Fish
+    filenames << "/sys/kernel/debug/flash_adp1650/mode";       // Jolla
+    filenames << "/sys/class/leds/led:torch_0/brightness";     // Xperia X    
+
+    foreach (QString filename, filenames) {
+        QFile file(filename);
+        QTextStream out(&file);
+        if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            out << value;
+            file.close();
+            qDebug() << "Flashlight toggled through" << filename;
+            return true;
+        }
+    }
 }
 
 void AutoBarcodeScanner::zoomTo(qreal digitalZoom) {
