@@ -1,5 +1,5 @@
 >
-> The author is no longer working on this project. Thanks for your support!
+> This repo isn't active anymore. Please see https://github.com/monich/sailfish-barcode
 >
 
 
