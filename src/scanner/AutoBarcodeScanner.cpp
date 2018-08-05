@@ -31,6 +31,8 @@ THE SOFTWARE.
 #include <QStandardPaths>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
+#include <QGuiApplication>
+#include <QQuickWindow>
 
 #include <iostream>
 #include <fstream>
@@ -60,6 +62,15 @@ AutoBarcodeScanner::AutoBarcodeScanner(QObject * parent)
     createConnections();
     m_timeoutTimer->setSingleShot(true);
     connect(m_timeoutTimer, SIGNAL(timeout()), this, SLOT(slotScanningTimeout()));
+
+    QGuiApplication *app = qobject_cast<QGuiApplication*>(qApp);
+
+       foreach (QWindow *win, app->allWindows()) {
+           QQuickWindow *quickWin = qobject_cast<QQuickWindow*>(win);
+           if (quickWin) {
+               m_mainWindow = quickWin;
+           }
+       }
 }
 
 AutoBarcodeScanner::~AutoBarcodeScanner() {
@@ -231,17 +242,22 @@ void AutoBarcodeScanner::processDecode() {
         m_scanProcessMutex.unlock();
 
         if (scanActive) {
-            createScreeshot();
-            QImage screenshot(m_decoder->getCaptureLocation());
-            saveDebugImage(screenshot, "debug_screenshot.jpg");
+            QImage screenshot = m_mainWindow->grabWindow();
+            //maybe
+            //saveDebugImage(screenshot, "debug_screenshot.jpg");
 
             // crop the image - we need only the viewfinder
             QImage copy = screenshot.copy(m_viewFinderRect);
-            copy.save(m_decoder->getCaptureLocation());
-            saveDebugImage(copy, "debug_cropped.jpg");
+            //maybe
+            //copy.save(m_decoder->getCaptureLocation());
+            //saveDebugImage(copy, "debug_cropped.jpg");
+
+
 
             qDebug() << "decoding cropped screenshot ...";
-            result = m_decoder->decodeBarcodeFromCache();
+            result = m_decoder->decodeBarcodeFromImage(copy);
+
+            copy.save(m_decoder->getCaptureLocation());
             code = result["content"].toString();
 
             if (code.isEmpty()) {
@@ -249,11 +265,12 @@ void AutoBarcodeScanner::processDecode() {
                 QTransform transform;
                 transform.rotate(90);
                 copy = copy.transformed(transform);
+                //maybe still do it in debug
                 copy.save(m_decoder->getCaptureLocation());
                 saveDebugImage(copy, "debug_transformed.jpg");
 
                 qDebug() << "decoding rotated screenshot ...";
-                result = m_decoder->decodeBarcodeFromCache();
+                result = m_decoder->decodeBarcodeFromImage(copy);
                 code = result["content"].toString();
             }
 
